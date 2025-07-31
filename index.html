@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astro Bite - Arma tu Pedido</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-rojo: #E63946;
+            --color-amarillo: #FFC300;
+            --color-fondo: #F8F9FA;
+            --color-texto: #212529;
+            --color-superficie: #FFFFFF;
+            --sombra-suave: 0px 8px 24px rgba(149, 157, 165, 0.2);
+            --fuente-principal: 'Poppins', sans-serif;
+        }
+
+        /* --- Corrección de diseño del botón y reseteo general --- */
+        * {
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--fuente-principal);
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            margin: 0;
+            overflow-x: hidden;
+        }
+        
+        main > section { padding: 80px 20px; }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); text-align: center; color: var(--color-rojo); line-height: 1.1; }
+        h2 { font-size: clamp(2rem, 6vw, 3rem); margin-bottom: 50px; text-align: center; }
+        h2 .highlight { color: var(--color-rojo); }
+
+        /* --- SECCIÓN HERO --- */
+        #hero { background-color: var(--color-amarillo); text-align: center; }
+
+        /* --- SECCIÓN DE PEDIDO PRINCIPAL --- */
+        .order-layout { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        @media (min-width: 900px) { .order-layout { grid-template-columns: 1fr 1fr; } }
+
+        .builder-options, .cart-container {
+            background: var(--color-superficie); padding: 30px; border-radius: 20px;
+            box-shadow: var(--sombra-suave);
+        }
+        
+        .step { margin-bottom: 25px; }
+        .step h3 { 
+            font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; color: var(--color-rojo); 
+            text-transform: none; border-bottom: 2px solid #eee; padding-bottom: 10px;
+        }
+        
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+        .options-grid input[type="radio"] { display: none; }
+        .options-grid label {
+            display: block; padding: 15px; border: 2px solid #ddd; border-radius: 10px;
+            text-align: center; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+        }
+        .options-grid label:hover { border-color: var(--color-amarillo); color: var(--color-rojo); }
+        .options-grid input[type="radio"]:checked + label {
+            background-color: var(--color-amarillo); border-color: var(--color-rojo);
+            color: var(--color-texto); transform: translateY(-2px);
+        }
+
+        .banderilla-preview {
+            background-color: var(--color-fondo); padding: 15px; border-radius: 10px;
+            margin-top: 20px; text-align: center;
+        }
+        .banderilla-preview span { font-weight: 700; font-size: 1.2rem; }
+        #banderilla-price-preview { color: var(--color-rojo); margin-left: 10px; }
+
+        #add-banderilla-btn {
+            display: block; width: 100%; padding: 18px; text-align: center; margin-top: 20px;
+            background: #28a745; color: white; border: none; border-radius: 12px;
+            font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+        }
+        #add-banderilla-btn:hover { background: #218838; transform: scale(1.03); }
+
+        .extras-container .step h3 { margin-top: 40px; }
+        .extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .extra-item { text-align: center; padding: 15px; border: 2px solid #eee; border-radius: 10px; }
+        .extra-item p { margin: 0 0 10px 0; font-weight: 700; }
+        .add-extra-btn {
+            width: 100%; padding: 10px; border: none; border-radius: 8px;
+            background: var(--color-amarillo); color: var(--color-texto);
+            font-weight: 700; cursor: pointer; transition: transform 0.2s;
+        }
+        .add-extra-btn:hover { transform: scale(1.05); }
+
+        /* --- CARRITO DE PEDIDO --- */
+        .cart-container h3 { text-align: center; }
+        #cart-items-container { list-style: none; padding: 0; margin: 0; min-height: 60px; }
+        #cart-items-container li {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5px; border-bottom: 1px solid #eee;
+        }
+        #cart-items-container .item-name { flex-grow: 1; }
+        #cart-items-container .item-price { font-weight: 700; margin: 0 15px; }
+        .remove-item-btn {
+            background: #dc3545; color: white; border: none; width: 28px; height: 28px;
+            border-radius: 50%; font-weight: 900; font-size: 1rem; cursor: pointer;
+            line-height: 28px; text-align: center; transition: all 0.2s ease;
+        }
+        .remove-item-btn:hover { background: #c82333; transform: scale(1.1); }
+        .cart-total { margin-top: 20px; text-align: right; }
+        #cart-total-price { font-size: 2.5rem; font-weight: 900; color: var(--color-rojo); }
+        #whatsapp-order-btn {
+            display: block; width: 100%; padding: 18px; text-align: center; background: var(--color-rojo);
+            color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700;
+            text-decoration: none; transition: all 0.3s ease; margin-top: 20px;
+            box-shadow: 0 4px 15px #e6394666;
+        }
+        #whatsapp-order-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px #e6394688; }
+        .empty-cart-message { color: #6c757d; text-align: center; padding: 20px; }
+        #whatsapp-order-btn.disabled { background: #6c757d; cursor: not-allowed; box-shadow: none; }
+
+        /* --- SECCIÓN DE INFORMACIÓN ADICIONAL --- */
+        #info { background-color: var(--color-superficie); }
+        .faq-container { width: 100%; max-width: 800px; margin: 0 auto; }
+        details {
+            background: var(--color-fondo); border: 1px solid #eee; border-radius: 10px;
+            margin-bottom: 15px; padding: 20px;
+        }
+        summary {
+            font-weight: 700; font-size: 1.2rem; cursor: pointer; list-style: none;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::after {
+            content: '+'; float: right; font-size: 1.5rem; color: var(--color-rojo);
+            transition: transform 0.3s;
+        }
+        details[open] summary::after { transform: rotate(45deg); }
+        details > p { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+        details a { color: var(--color-rojo); font-weight: 700; }
+        
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--color-texto); color: var(--color-fondo);
+            text-align: center; padding: 40px 20px;
+        }
+        footer a { color: var(--color-amarillo); margin: 0 10px; }
+    </style>
+</head>
+<body>
+
+<main>
+    <section id="hero">
+        <h1>Tu Banderilla Coreana,<br>Crujiente y Perfecta</h1>
+    </section>
+
+    <section id="order">
+        <div class="container">
+            <h2>¡Arma tu <span class="highlight">Pedido</span>! 🐾</h2>
+            <div class="order-layout">
+                
+                <div class="builder-container">
+                    <div class="builder-options">
+                        <div class="step">
+                            <h3>1. Arma tu Banderilla</h3>
+                            <div class="options-grid" id="relleno-group">
+                                <input type="radio" id="r-salchicha" name="relleno" value="Salchicha"><label for="r-salchicha">Salchicha</label>
+                                <input type="radio" id="r-queso" name="relleno" value="Queso"><label for="r-queso">Queso</label>
+                                <input type="radio" id="r-combinada" name="relleno" value="Combinada" checked><label for="r-combinada">Combinada</label>
+                            </div>
+                            <br>
+                            <div class="options-grid" id="cubierta-group">
+                                <input type="radio" id="c-panko" name="cubierta" value="Panko" checked><label for="c-panko">Panko</label>
+                                <input type="radio" id="c-papa" name="cubierta" value="Papa"><label for="c-papa">Papa</label>
+                                <input type="radio" id="c-ramen" name="cubierta" value="Ramen"><label for="c-ramen">Ramen</label>
+                                <input type="radio" id="c-cheetos" name="cubierta" value="Cheetos"><label for="c-cheetos">Cheetos</label>
+                                <input type="radio" id="c-flamin" name="cubierta" value="Flamin' Hot"><label for="c-flamin">Flamin' Hot</label>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h3>2. ¿Le agregas Papas?</h3>
+                            <div class="options-grid" id="papas-banderilla-group">
+                                <input type="radio" id="p-bande-si" name="papas-banderilla" value="si"><label for="p-bande-si">Sí (+ $15)</label>
+                                <input type="radio" id="p-bande-no" name="papas-banderilla" value="no" checked><label for="p-bande-no">No, gracias</label>
+                            </div>
+                        </div>
+
+                        <div class="banderilla-preview">
+                            <span>Precio de esta Banderilla:</span>
+                            <span id="banderilla-price-preview">$0.00</span>
+                        </div>
+                        <button id="add-banderilla-btn">Agregar Banderilla</button>
+
+                        <div class="extras-container">
+                             <div class="step">
+                                <h3>3. Agrega Extras</h3>
+                                <div class="extras-grid">
+                                    <div class="extra-item"><p>Salchipulpos ($35)</p><button class="add-extra-btn" data-name="Salchipulpos" data-price="35">Agregar</button></div>
+                                    <div class="extra-item"><p>Papas a la Francesa ($40)</p><button class="add-extra-btn" data-name="Papas a la Francesa" data-price="40">Agregar</button></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="cart-container">
+                    <h3>TU PEDIDO</h3>
+                    <ul id="cart-items-container"><p class="empty-cart-message">Tu pedido está vacío.</p></ul>
+                    <div class="cart-total">
+                        <p style="margin:0; font-weight:700;">TOTAL:</p>
+                        <p id="cart-total-price">$0.00</p>
+                    </div>
+                    <a id="whatsapp-order-btn" href="#" target="_blank">Enviar Pedido por WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="info">
+        <div class="container">
+            <h2>Todo lo que Debes Saber sobre <span class="highlight">Astro Bite</span></h2>
+            <div class="faq-container">
+                <details>
+                    <summary>📍 ¿Dónde los encuentro?</summary>
+                    <p>¡Estamos justo afuera del metro UAM Azcapotzalco! Búscanos frente al puesto de revistas. Es muy fácil llegar. <a href="https://maps.app.goo.gl/1SSN2uPjn6Br17x7A" target="_blank">Ver en Google Maps</a>.</p>
+                </details>
+                <details>
+                    <summary>🕒 ¿Qué días y a qué hora abren?</summary>
+                    <p>Estamos para ti de <strong>Viernes a Domingo</strong>, de <strong>4:00 PM a 9:00 PM</strong> (o hasta agotar existencias, ¡que no se te haga tarde!). Los demás días, Astro y nosotros descansamos.</p>
+                </details>
+                <details>
+                    <summary>💳 ¿Cómo puedo pagar?</summary>
+                    <p>Aceptamos <strong>efectivo, transferencias y todas las tarjetas de crédito/débito</strong>. Puedes pagar por adelantado vía transferencia al hacer tu pedido por WhatsApp para que sea más rápido.</p>
+                </details>
+                 <details>
+                    <summary>⏱️ ¿Cuánto tardan y cómo pido?</summary>
+                    <p>Cada banderilla se prepara al momento para que esté súper crujiente y calientita. El tiempo de espera es de 5 a 7 minutos. Puedes usar esta página para armar tu pedido y mandarlo por WhatsApp para solo llegar a recoger. ¡Por ahora solo es pick-up!</p>
+                </details>
+                 <details>
+                    <summary>✨ ¿Hay promociones o descuentos?</summary>
+                    <p>Por ahora no manejamos combos fijos ni descuentos por volumen. ¡Pero síguenos en nuestras redes sociales para no perderte de futuras sorpresas y recompensas a nuestros clientes leales! <a href="https://www.instagram.com/astro_bite/" target="_blank">Instagram</a> y <a href="https://www.tiktok.com/@_astrobites" target="_blank">TikTok</a>.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>© 2025 Astro Bite - Hecho con 🐾 y cariño.</p>
+    <p>
+        <a href="https://www.instagram.com/astro_bite/" target="_blank">Instagram</a> | 
+        <a href="https://www.tiktok.com/@_astrobites" target="_blank">TikTok</a>
+    </p>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const prices = {
+        relleno: { Salchicha: 45, Combinada: 50, Queso: 55 },
+        cubiertaPremium: 10,
+        papasConBanderilla: 15, // Precio del Add-on de papas
+    };
+    const premiumCubiertas = ["Cheetos", "Flamin' Hot"];
+    let pedido = [];
+
+    const rellenoGroup = document.getElementById('relleno-group');
+    const cubiertaGroup = document.getElementById('cubierta-group');
+    const papasBanderillaGroup = document.getElementById('papas-banderilla-group'); // Nuevo grupo de radio
+    const banderillaPricePreview = document.getElementById('banderilla-price-preview');
+    const addBanderillaBtn = document.getElementById('add-banderilla-btn');
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const cartTotalPrice = document.getElementById('cart-total-price');
+    const whatsappBtn = document.getElementById('whatsapp-order-btn');
+    const extrasContainer = document.querySelector('.extras-grid');
+
+    // --- LÓGICA DEL CONSTRUCTOR DE BANDERILLAS ---
+    function actualizarPrecioPreview() {
+        const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
+        const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
+        const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
+        
+        if (!selectedRelleno || !selectedCubierta) return 0;
+
+        let precioActual = prices.relleno[selectedRelleno.value];
+        
+        if (premiumCubiertas.includes(selectedCubierta.value)) {
+            precioActual += prices.cubiertaPremium;
+        }
+
+        // Sumar el precio de las papas si están seleccionadas
+        if (selectedPapas && selectedPapas.value === 'si') {
+            precioActual += prices.papasConBanderilla;
+        }
+
+        banderillaPricePreview.textContent = `$${precioActual.toFixed(2)}`;
+        return precioActual;
+    }
+
+    function agregarBanderilla() {
+        const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
+        const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
+        const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
+        
+        const precioFinalBanderilla = actualizarPrecioPreview();
+        
+        // Construir el nombre de la banderilla, incluyendo si lleva papas
+        let nombreBanderilla = `Banderilla ${selectedRelleno.value} (${selectedCubierta.value})`;
+        if (selectedPapas && selectedPapas.value === 'si') {
+            nombreBanderilla += ' c/Papas';
+        }
+
+        const nuevaBanderilla = {
+            id: Date.now(),
+            nombre: nombreBanderilla,
+            precio: precioFinalBanderilla
+        };
+
+        pedido.push(nuevaBanderilla);
+        renderizarPedido();
+    }
+    
+    function agregarExtra(nombre, precio) {
+        const nuevoExtra = { id: Date.now(), nombre: nombre, precio: parseFloat(precio) };
+        pedido.push(nuevoExtra);
+        renderizarPedido();
+    }
+
+    // --- LÓGICA DEL CARRITO DE PEDIDO ---
+    function eliminarDelPedido(itemId) {
+        pedido = pedido.filter(item => item.id !== parseInt(itemId));
+        renderizarPedido();
+    }
+    
+    function renderizarPedido() {
+        cartItemsContainer.innerHTML = '';
+        if (pedido.length === 0) {
+            cartItemsContainer.innerHTML = '<p class="empty-cart-message">Tu pedido está vacío.</p>';
+            whatsappBtn.classList.add('disabled');
+        } else {
+            whatsappBtn.classList.remove('disabled');
+            pedido.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="item-name">${item.nombre}</span><span class="item-price">$${item.precio.toFixed(2)}</span><button class="remove-item-btn" data-id="${item.id}">X</button>`;
+                cartItemsContainer.appendChild(li);
+            });
+        }
+        
+        const total = pedido.reduce((sum, item) => sum + item.precio, 0);
+        cartTotalPrice.textContent = `$${total.toFixed(2)}`;
+        actualizarLinkWhatsApp();
+    }
+    
+    function actualizarLinkWhatsApp() {
+        if (pedido.length === 0) {
+            whatsappBtn.href = '#'; return;
+        }
+
+        let orderText = '¡Hola Astro Bite! 🐶 Quisiera ordenar lo siguiente:\n\n';
+        pedido.forEach(item => {
+            orderText += `- ${item.nombre}: $${item.precio.toFixed(2)}\n`;
+        });
+        
+        const total = pedido.reduce((sum, item) => sum + item.precio, 0);
+        orderText += `\n*TOTAL: $${total.toFixed(2)}*\n\n¿Me confirman por favor?`;
+        
+        const whatsappURL = `https://api.whatsapp.com/send?phone=5615635393&text=${encodeURIComponent(orderText)}`;
+        whatsappBtn.href = whatsappURL;
+    }
+
+    // --- ASIGNACIÓN DE EVENTOS ---
+    rellenoGroup.addEventListener('change', actualizarPrecioPreview);
+    cubiertaGroup.addEventListener('change', actualizarPrecioPreview);
+    papasBanderillaGroup.addEventListener('change', actualizarPrecioPreview); // Nuevo listener
+    addBanderillaBtn.addEventListener('click', agregarBanderilla);
+    
+    extrasContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('add-extra-btn')) {
+            agregarExtra(e.target.dataset.name, e.target.dataset.price);
+        }
+    });
+
+    cartItemsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-item-btn')) {
+            eliminarDelPedido(e.target.dataset.id);
+        }
+    });
+    
+    whatsappBtn.addEventListener('click', (e) => {
+        if (pedido.length === 0) {
+            e.preventDefault();
+            alert("Tu pedido está vacío. ¡Agrega algo antes de enviar!");
+        }
+    });
+
+    // --- INICIALIZACIÓN AL CARGAR LA PÁGINA ---
+    actualizarPrecioPreview();
+    renderizarPedido();
+});
+</script>
+
+</body>
+</html>
