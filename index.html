@@ -75,7 +75,7 @@
 
     /* Aquí van todos los estilos de la IMAGEN DE FONDO */
     background-image: url(banderillas.png); /* He subido tu imagen a un link público para asegurar que funcione */
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     
     /* Paso 3: APLICAMOS EL FILTRO DE DIFUMINADO SÓLO A ESTA CAPA */
@@ -103,14 +103,8 @@
 / SECCIÓN DEL LOGO                      /
 / ======================================= */
 
-#logo-section {
-padding: 20px 0; /* Espacio vertical alrededor del logo */
-text-align: center; /* Centra el logo horizontalmente */
-background-color: var(--color-fondo); /* Opcional: para un fondo consistente */
-}
-
 .logo-image {
-max-width: 150px; /* Establece un ancho máximo para pantallas grandes */
+max-width: 200px; /* Establece un ancho máximo para pantallas grandes */
 height: auto; /* Mantiene la proporción del logo */
 display: block; /* Evita espaciados extra alrededor de la imagen */
 margin: 0 auto; /* Centra la imagen dentro de su contenedor */
@@ -119,7 +113,7 @@ margin: 0 auto; /* Centra la imagen dentro de su contenedor */
 /* Media query para pantallas más pequeñas (teléfonos) */
 @media (max-width: 600px) {
 .logo-image {
-max-width: 100px; /* Reduce el tamaño máximo en pantallas pequeñas */
+max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
 }
 }
 
@@ -237,13 +231,12 @@ max-width: 100px; /* Reduce el tamaño máximo en pantallas pequeñas */
 <main>
     <section id="hero">
         <h1>Tu Banderilla Coreana,<br>Crujiente y Perfecta</h1>
-    </section>
-
-    <section id="logo-section">
         <div class="container">
         <img src="logo.png" alt="Logo de Astro Bite" class="logo-image">
         </div>
     </section>
+
+    
 
     <section id="order">
         <div class="container">
