@@ -603,15 +603,19 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
 
      <!-- SECCIÓN DE QUEJAS Y SUGERENCIAS -->
     <section id="quejas">
-        <div class="container">
-            <h2>📢 Quejas y Sugerencias</h2>
-            <p style="text-align:center; max-width:600px; margin:0 auto 30px;">Queremos mejorar siempre 🐾. Cuéntanos cualquier queja, sugerencia o experiencia que quieras compartir.</p>
-             <form action="https://formsubmit.co/banderillas.astro.bite@gmail.com" method="POST">
-                <textarea name=mennsaje id="mensajeSugerencia" rows="5" placeholder="Escribe tu mensaje aquí..." style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc;"></textarea>
-                <button type="submit" style="margin-top:15px; background:var(--color-rojo); color:white; font-weight:700; padding:12px 20px; border:none; border-radius:8px; cursor:pointer; width:100%;">Enviar</button>
-            </form>
-        </div>
-    </section>
+    <div class="container">
+        <h2>📢 Quejas y Sugerencias</h2>
+        <p style="text-align:center; max-width:600px; margin:0 auto 30px;">Queremos mejorar siempre 🐾. Cuéntanos cualquier queja, sugerencia o experiencia que quieras compartir.</p>
+        
+        <form id="form-sugerencia" action="https://formsubmit.co/banderillas.astro.bite@gmail.com" method="POST">
+            
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://banderillas-astrobite.github.io/astro-bite-1/"> <textarea name="message" id="mensajeSugerencia" rows="5" placeholder="Escribe tu mensaje aquí..." required style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc;"></textarea>
+            
+            <button id="sugerencia-btn" type="submit" style="margin-top:15px; background:var(--color-rojo); color:white; font-weight:700; padding:12px 20px; border:none; border-radius:8px; cursor:pointer; width:100%;">Enviar Comentario</button>
+        </form>
+    </div>
+</section>
 
 </main>
 
@@ -777,20 +781,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.enviarSugerencia = function(event) {
-        event.preventDefault();
-        const mensajeSugerencia = document.getElementById('mensajeSugerencia');
-        if (mensajeSugerencia.value.length < 5) {
-            alert("Por favor escribe un mensaje más detallado 🙏");
-            return;
-        }
-        const popup = document.getElementById('popup-sugerencia');
-        if (popup) {
-            popup.classList.add('active');
-        }
-        mensajeSugerencia.value = '';
-    }
-    
+    // --- NUEVO MANEJADOR PARA EL FORMULARIO DE SUGERENCIAS CON AJAX ---
+    const formSugerencia = document.getElementById('form-sugerencia');
+
+    formSugerencia.addEventListener('submit', function (event) {
+        event.preventDefault(); // ¡La línea más importante! Evita la redirección.
+
+        const botonSubmit = document.getElementById('sugerencia-btn');
+        const formData = new FormData(this); // Obtenemos los datos del formulario
+
+        // Deshabilitamos el botón mientras se envía
+        botonSubmit.disabled = true;
+        botonSubmit.textContent = 'Enviando...';
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json' // Clave para que FormSubmit no redirija
+            }
+        }).then(response => {
+            if (response.ok) {
+                // Si el envío fue exitoso, mostramos tu pop-up
+                const popup = document.getElementById('popup-sugerencia');
+                if (popup) {
+                    popup.classList.add('active');
+                }
+                formSugerencia.reset(); // Vaciamos el formulario
+            } else {
+                // Si hubo un error en la respuesta
+                alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
+            }
+        }).catch(error => {
+            // Si hubo un error de red
+            console.error('Error en el envío del formulario:', error);
+            alert('Hubo un error de red. Por favor, revisa tu conexión.');
+        }).finally(() => {
+            // Se ejecuta siempre, al final. Habilitamos el botón de nuevo.
+            botonSubmit.disabled = false;
+            botonSubmit.textContent = 'Enviar Comentario';
+        });
+    });
     // =================================================
     // ASIGNACIÓN DE EVENTOS (EVENT LISTENERS)
     // =================================================
