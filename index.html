@@ -643,6 +643,8 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
+    const MODO_PRUEBA = true; // <-- AÑADE ESTA LÍNEA AQUÍ
+
     // =================================================
     // 1. DECLARACIÓN DE VARIABLES Y CONSTANTES
     // =================================================
@@ -790,6 +792,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function verificarHorario() {
+        // Si el MODO_PRUEBA está activado, siempre decimos que la tienda está abierta.
+        if (MODO_PRUEBA) {
+            return true;
+        }
+
+        // Si no, la función continúa con su lógica normal de horario.
         const ahora = new Date();
         const dia = ahora.getDay();
         const hora = ahora.getHours();
