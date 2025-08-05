@@ -1,0 +1,21 @@
+
+{
+  "short_name": "Astro Bite",
+  "name": "Astro Bite - Pide tu Banderilla",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo.png",
+      "type": "image/png",
+      "sizes": "512x512" 
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#E63946",
+  "background_color": "#F8F9FA"
+}
