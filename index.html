@@ -13,6 +13,103 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
+
+        .menu-carousel-section {
+  padding: 2rem;
+  background: #fff3e0;
+  text-align: center;
+}
+
+.menu-carousel-section h2 {
+  margin-bottom: 1rem;
+  color: #c62828;
+}
+/* ======================================================= /
+/  CÓDIGO CORREGIDO Y ROBUSTO PARA EL CARRUSEL INFINITO  /
+/ ======================================================= */
+
+/* 1. Definimos variables para controlar nuestro carrusel fácilmente */
+:root {
+  --image-width: 150px; /* Ancho de cada imagen */
+  --image-margin: 1rem;   /* Margen a cada lado de la imagen */
+}
+
+/* 2. El contenedor principal que oculta lo que no se ve */
+.carousel {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  /* Un degradado suave en los bordes para un mejor efecto visual */
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%);
+}
+
+/* 3. La 'pista' que se moverá */
+.carousel-track {
+  display: flex; /* Ponemos los elementos en línea */
+  flex-shrink: 0; /* Evitamos que los elementos se encojan */
+  /* Calculamos el ancho total exacto de la pista (5 imágenes originales x 2 = 10) */
+  width: calc(10 * (var(--image-width) + (2 * var(--image-margin))));
+  /* Aquí aplicamos la animación */
+  animation: astro-scroll 20s linear infinite;
+}
+
+/* 4. Estilo para cada imagen del carrusel */
+.carousel img {
+  width: var(--image-width);
+  margin: 0 var(--image-margin);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.carousel img:hover {
+  transform: scale(1.05);
+}
+
+/* 5. La animación, ahora con un cálculo perfecto */
+@keyframes astro-scroll {
+  from {
+    /* Empezamos en la posición inicial */
+    transform: translateX(0);
+  }
+  to {
+    /* Movemos la pista una distancia EXACTA: el ancho de las 5 imágenes originales */
+    transform: translateX(calc(-1 * (5 * (var(--image-width) + (2 * var(--image-margin))))));
+  }
+}
+
+/* 6. Media Query para cambiar la velocidad en móvil (opcional) */
+@media (max-width: 768px) {
+  .carousel-track {
+    /* Hacemos la animación más rápida en móviles */
+    animation-duration: 15s;
+  }
+}
+
+/* 7. Pausar la animación al pasar el ratón por encima */
+.carousel:hover .carousel-track {
+  animation-play-state: paused;
+}
+
+/* Tooltip emergente */
+.tooltip {
+  position: absolute;
+  background-color: #fff;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-size: 0.9rem;
+  max-width: 200px;
+  z-index: 9999;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
         :root {
             --color-rojo: #E63946;
             --color-amarillo: #FFC300;
@@ -159,16 +256,112 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
         }
         #add-banderilla-btn:hover { background: #218838; transform: scale(1.03); }
 
+        /* --- ESTILOS PARA LA ANIMACIÓN DEL BOTÓN DE AGREGAR --- */
+
+/* 1. Preparamos el botón original para la transición */
+#add-banderilla-btn {
+  /* ... (tus estilos existentes como background, color, etc. se mantienen) ... */
+  position: relative; /* Necesario para posicionar la palomita */
+  overflow: hidden;   /* Oculta el texto que se sale al encogerse */
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1); /* Transición suave */
+}
+
+/* 2. Definimos el estado 'confirmado' del botón */
+#add-banderilla-btn.confirmed {
+  width: 60px; /* Ancho fijo para hacerlo un círculo perfecto */
+  height: 60px; /* Misma altura que el ancho */
+  border-radius: 50%; /* Esto lo hace redondo */
+  padding: 0;
+  color: transparent; /* Ocultamos el texto original */
+}
+
+/* 3. Creamos la palomita con un pseudo-elemento (::after) */
+#add-banderilla-btn::after {
+  content: '✓'; /* El símbolo de la palomita */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0); /* Empieza invisible y escalado a 0 */
+  color: white;
+  font-size: 2rem; /* Tamaño de la palomita */
+  font-weight: 900;
+  transition: transform 0.3s ease-in-out 0.2s; /* La palomita aparece con un ligero retraso */
+}
+
+/* 4. Hacemos visible la palomita cuando el botón tiene la clase .confirmed */
+#add-banderilla-btn.confirmed::after {
+  transform: translate(-50%, -50%) scale(1); /* Hacemos la palomita visible */
+}
+
+/* 5. Evitamos efectos de hover mientras el botón está deshabilitado durante la animación */
+#add-banderilla-btn:disabled {
+  background: #218838; /* Mantenemos el color de éxito */
+  transform: none;
+  cursor: not-allowed;
+}
+
         .extras-container .step h3 { margin-top: 40px; }
         .extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .extra-item { text-align: center; padding: 15px; border: 2px solid #eee; border-radius: 10px; }
         .extra-item p { margin: 0 0 10px 0; font-weight: 700; }
-        .add-extra-btn {
-            width: 100%; padding: 10px; border: none; border-radius: 8px;
-            background: var(--color-amarillo); color: var(--color-texto);
-            font-weight: 700; cursor: pointer; transition: transform 0.2s;
-        }
-        .add-extra-btn:hover { transform: scale(1.05); }
+        /* --- ESTILOS PARA LA ANIMACIÓN DE LOS BOTONES DE EXTRAS --- */
+
+/* 1. Preparamos el botón original para la transición */
+.add-extra-btn {
+  /* ... (tus estilos existentes como background, color, etc. se mantienen) ... */
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-amarillo);
+  color: var(--color-texto);
+  font-weight: 700;
+  cursor: pointer;
+  position: relative; /* Necesario para la palomita */
+  overflow: hidden;   /* Oculta el texto que se sale */
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* 2. Definimos el estado 'confirmado' */
+.add-extra-btn.confirmed {
+  width: 44px;  /* Un poco más pequeño que el botón principal */
+  height: 44px;
+  border-radius: 50%;
+  padding: 0;
+  background-color: #28a745; /* Color de éxito verde */
+  color: transparent;
+}
+
+/* 3. Creamos la palomita (funciona igual que antes) */
+.add-extra-btn::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  color: white;
+  font-size: 1.5rem; /* Un poco más pequeña */
+  font-weight: 900;
+  transition: transform 0.3s ease-in-out 0.2s;
+}
+
+/* 4. Hacemos visible la palomita en el estado 'confirmado' */
+.add-extra-btn.confirmed::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* 5. Estilos para el botón deshabilitado durante la animación */
+.add-extra-btn:disabled {
+  background: #28a745;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* Borra la regla de hover que tenías antes (.add-extra-btn:hover)
+   y usa esta para evitar el efecto mientras está deshabilitado */
+.add-extra-btn:not(:disabled):hover {
+  transform: scale(1.05);
+}
 
         /* --- CARRITO DE PEDIDO --- */
         .cart-container h3 { text-align: center; }
@@ -224,6 +417,64 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
         footer a { 
             color: white;
          }
+
+        /* --- ESTILOS PARA EL POP-UP DE AGRADECIMIENTO --- */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  display: none; /* Oculto por defecto */
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-overlay.active {
+  display: flex; /* Se hace visible al agregar la clase 'active' */
+}
+
+.popup-content {
+  background: var(--color-superficie);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  color: var(--color-texto);
+}
+
+.popup-content h3 {
+  color: var(--color-rojo);
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+}
+
+.popup-content p {
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+}
+
+.popup-close-btn {
+  background: var(--color-rojo);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 25px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+.popup-close-btn:hover {
+  transform: scale(1.05);
+}         
+
     </style>
 </head>
 <body>
@@ -236,7 +487,27 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
         </div>
     </section>
 
-    
+    <!-- MENÚ COMPLETO -->
+    <section class="menu-carousel-section">
+  <h2>TODAS NUESTRAS BANDERILLAS</h2>
+  <div class="carousel" id="banderilla-carousel">
+    <div class="carousel-track">
+      <img src="cruji.png" alt="Banderilla Cruji" data-desc=" Clásica y deliciosa: salchicha, queso o combinada envuelta en masa crujiente con panko doradito.">
+      <img src="ramen.png" alt="Banderilla Ramen" data-desc=" Salchicha, queso o combinada con una capa perfecta de ramen.">
+      <img src="papa.png" alt="Banderilla Papa" data-desc=" Salchicha, queso o combinada, cubierta de cubitos de papa y un toque de panko, deliciosa y crujiente en cada bocado">
+      <img src="cheetos.png" alt="Banderilla Cheetos" data-desc="Cheetos por fuera, queso por dentro. Explosiva, crujiente y adictiva. ¡Atrévete a probarla!... Pidela tambien con relleno de salchicha o combinada">
+      <img src="flamin hot.png" alt="Banderilla Flamin Hot" data-desc="Banderilla crujiente cubierta con los originales cheetos flamin' hot ¡Arde sabroso!">
+
+      <img src="cruji.png" alt="Banderilla Cruji" data-desc=" Clásica y deliciosa: salchicha, queso o combinada envuelta en masa crujiente con panko doradito.">
+      <img src="ramen.png" alt="Banderilla Ramen" data-desc=" Salchicha, queso o combinada con una capa perfecta de ramen.">
+      <img src="papa.png" alt="Banderilla Papa" data-desc=" Salchicha, queso o combinada, cubierta de cubitos de papa y un toque de panko, deliciosa y crujiente en cada bocado">
+      <img src="cheetos.png" alt="Banderilla Cheetos" data-desc="Cheetos por fuera, queso por dentro. Explosiva, crujiente y adictiva. ¡Atrévete a probarla!... Pidela tambien con relleno de salchicha o combinada">
+      <img src="flamin hot.png" alt="Banderilla Flamin Hot" data-desc="Banderilla crujiente cubierta con los originales cheetos flamin' hot ¡Arde sabroso!">
+
+
+    </div>
+  </div>
+</section>
 
     <section id="order">
         <div class="container">
@@ -329,6 +600,19 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
             </div>
         </div>
     </section>
+
+     <!-- SECCIÓN DE QUEJAS Y SUGERENCIAS -->
+    <section id="quejas">
+        <div class="container">
+            <h2>📢 Quejas y Sugerencias</h2>
+            <p style="text-align:center; max-width:600px; margin:0 auto 30px;">Queremos mejorar siempre 🐾. Cuéntanos cualquier queja, sugerencia o experiencia que quieras compartir.</p>
+             <form action="https://formsubmit.co/banderillas.astro.bite@gmail.com" method="POST">
+                <textarea name=mennsaje id="mensajeSugerencia" rows="5" placeholder="Escribe tu mensaje aquí..." style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc;"></textarea>
+                <button type="submit" style="margin-top:15px; background:var(--color-rojo); color:white; font-weight:700; padding:12px 20px; border:none; border-radius:8px; cursor:pointer; width:100%;">Enviar</button>
+            </form>
+        </div>
+    </section>
+
 </main>
 
 <footer>
@@ -339,85 +623,95 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
     </p>
 </footer>
 
+
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
+    // =================================================
+    // VARIABLES Y CONSTANTES GLOBALES
+    // =================================================
     const prices = {
         relleno: { Salchicha: 45, Combinada: 50, Queso: 55 },
         cubiertaPremium: 10,
-        papasConBanderilla: 15, // Precio del Add-on de papas
+        papasConBanderilla: 15,
     };
     const premiumCubiertas = ["Cheetos", "Flamin' Hot"];
     let pedido = [];
+    let currentTooltip = null;
 
+    // --- Selectores de Elementos del DOM ---
     const rellenoGroup = document.getElementById('relleno-group');
     const cubiertaGroup = document.getElementById('cubierta-group');
-    const papasBanderillaGroup = document.getElementById('papas-banderilla-group'); // Nuevo grupo de radio
+    const papasBanderillaGroup = document.getElementById('papas-banderilla-group');
     const banderillaPricePreview = document.getElementById('banderilla-price-preview');
     const addBanderillaBtn = document.getElementById('add-banderilla-btn');
     const cartItemsContainer = document.getElementById('cart-items-container');
     const cartTotalPrice = document.getElementById('cart-total-price');
     const whatsappBtn = document.getElementById('whatsapp-order-btn');
     const extrasContainer = document.querySelector('.extras-grid');
+    const carouselTrack = document.querySelector('.carousel-track');
+    const carouselImages = carouselTrack.querySelectorAll('img');
 
-    // --- LÓGICA DEL CONSTRUCTOR DE BANDERILLAS ---
+    // =================================================
+    // FUNCIONES PRINCIPALES DE LA APLICACIÓN
+    // =================================================
+
     function actualizarPrecioPreview() {
         const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
         const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
         const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
-        
         if (!selectedRelleno || !selectedCubierta) return 0;
-
         let precioActual = prices.relleno[selectedRelleno.value];
-        
         if (premiumCubiertas.includes(selectedCubierta.value)) {
             precioActual += prices.cubiertaPremium;
         }
-
-        // Sumar el precio de las papas si están seleccionadas
         if (selectedPapas && selectedPapas.value === 'si') {
             precioActual += prices.papasConBanderilla;
         }
-
         banderillaPricePreview.textContent = `$${precioActual.toFixed(2)}`;
         return precioActual;
     }
 
     function agregarBanderilla() {
+        if (addBanderillaBtn.classList.contains('confirmed')) return;
         const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
         const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
         const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
-        
         const precioFinalBanderilla = actualizarPrecioPreview();
-        
-        // Construir el nombre de la banderilla, incluyendo si lleva papas
         let nombreBanderilla = `Banderilla ${selectedRelleno.value} (${selectedCubierta.value})`;
         if (selectedPapas && selectedPapas.value === 'si') {
             nombreBanderilla += ' c/Papas';
         }
-
-        const nuevaBanderilla = {
-            id: Date.now(),
-            nombre: nombreBanderilla,
-            precio: precioFinalBanderilla
-        };
-
+        const nuevaBanderilla = { id: Date.now(), nombre: nombreBanderilla, precio: precioFinalBanderilla };
         pedido.push(nuevaBanderilla);
         renderizarPedido();
+        addBanderillaBtn.classList.add('confirmed');
+        addBanderillaBtn.disabled = true;
+        setTimeout(() => {
+            addBanderillaBtn.classList.remove('confirmed');
+            addBanderillaBtn.disabled = false;
+        }, 1500);
     }
-    
-    function agregarExtra(nombre, precio) {
+
+    function agregarExtra(nombre, precio, botonPresionado) {
+        if (botonPresionado.classList.contains('confirmed')) return;
         const nuevoExtra = { id: Date.now(), nombre: nombre, precio: parseFloat(precio) };
         pedido.push(nuevoExtra);
         renderizarPedido();
+        botonPresionado.classList.add('confirmed');
+        botonPresionado.disabled = true;
+        setTimeout(() => {
+            botonPresionado.classList.remove('confirmed');
+            botonPresionado.disabled = false;
+        }, 1500);
     }
 
-    // --- LÓGICA DEL CARRITO DE PEDIDO ---
     function eliminarDelPedido(itemId) {
         pedido = pedido.filter(item => item.id !== parseInt(itemId));
         renderizarPedido();
     }
-    
+
     function renderizarPedido() {
         cartItemsContainer.innerHTML = '';
         if (pedido.length === 0) {
@@ -431,59 +725,127 @@ document.addEventListener('DOMContentLoaded', () => {
                 cartItemsContainer.appendChild(li);
             });
         }
-        
         const total = pedido.reduce((sum, item) => sum + item.precio, 0);
         cartTotalPrice.textContent = `$${total.toFixed(2)}`;
         actualizarLinkWhatsApp();
     }
-    
+
     function actualizarLinkWhatsApp() {
         if (pedido.length === 0) {
-            whatsappBtn.href = '#'; return;
+            whatsappBtn.href = '#';
+            return;
         }
-
         let orderText = '¡Hola Astro Bite! 🐶 Quisiera ordenar lo siguiente:\n\n';
         pedido.forEach(item => {
             orderText += `- ${item.nombre}: $${item.precio.toFixed(2)}\n`;
         });
-        
         const total = pedido.reduce((sum, item) => sum + item.precio, 0);
         orderText += `\n*TOTAL: $${total.toFixed(2)}*\n\n¿Me confirman por favor?`;
-        
         const whatsappURL = `https://api.whatsapp.com/send?phone=5615635393&text=${encodeURIComponent(orderText)}`;
         whatsappBtn.href = whatsappURL;
     }
 
-    // --- ASIGNACIÓN DE EVENTOS ---
+    function verificarHorario() {
+        const ahora = new Date();
+        const dia = ahora.getDay(); // 0=domingo ... 6=sábado
+        const hora = ahora.getHours();
+        return ([5, 6, 0].includes(dia)) && (hora >= 16 && hora < 21);
+    }
+
+    function mostrarAviso() {
+        const avisoHorario = document.createElement('div');
+        avisoHorario.style.cssText = `position: sticky; top: 0; width: 100%; z-index: 1000; background: #ffc107; color: #212529; padding: 15px; text-align: center; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.2);`;
+        document.body.prepend(avisoHorario);
+        const tiendaAbierta = verificarHorario();
+        const agotado = false; // CAMBIA ESTO A true CUANDO YA NO HAYA PRODUCTO
+        if (!tiendaAbierta) {
+            avisoHorario.textContent = "🚫 La tienda está cerrada. Horario: Viernes a Domingo de 4:00 PM a 9:00 PM.";
+        } else if (agotado) {
+            avisoHorario.textContent = "❌ Hoy ya se terminaron las banderillas. ¡Vuelve mañana!";
+        } else {
+            avisoHorario.remove();
+        }
+    }
+
+    function crearPopupSugerencia() {
+        const popupHTML = `<div class="popup-overlay" id="popup-sugerencia"><div class="popup-content"><h3>¡Gracias!</h3><p>🐾 Tus comentarios nos ayudan a mejorar siempre.</p><button class="popup-close-btn">Entendido</button></div></div>`;
+        document.body.insertAdjacentHTML('beforeend', popupHTML);
+        const popup = document.getElementById('popup-sugerencia');
+        popup.querySelector('.popup-close-btn').addEventListener('click', () => popup.classList.remove('activa'));
+        popup.addEventListener('click', (e) => {
+            if (e.target.id === 'popup-sugerencia') popup.classList.remove('activa');
+        });
+    }
+
+    window.enviarSugerencia = function(event) {
+        event.preventDefault();
+        const mensajeSugerencia = document.getElementById('mensajeSugerencia');
+        if (mensajeSugerencia.value.length < 5) {
+            alert("Por favor escribe un mensaje más detallado 🙏");
+            return;
+        }
+        const popup = document.getElementById('popup-sugerencia');
+        if (popup) {
+            popup.classList.add('active');
+        }
+        mensajeSugerencia.value = '';
+    }
+    
+    // =================================================
+    // ASIGNACIÓN DE EVENTOS (EVENT LISTENERS)
+    // =================================================
     rellenoGroup.addEventListener('change', actualizarPrecioPreview);
     cubiertaGroup.addEventListener('change', actualizarPrecioPreview);
-    papasBanderillaGroup.addEventListener('change', actualizarPrecioPreview); // Nuevo listener
+    papasBanderillaGroup.addEventListener('change', actualizarPrecioPreview);
     addBanderillaBtn.addEventListener('click', agregarBanderilla);
-    
     extrasContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('add-extra-btn')) {
-            agregarExtra(e.target.dataset.name, e.target.dataset.price);
+        const botonPresionado = e.target.closest('.add-extra-btn');
+        if (botonPresionado) {
+            agregarExtra(botonPresionado.dataset.name, botonPresionado.dataset.price, botonPresionado);
         }
     });
-
     cartItemsContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove-item-btn')) {
             eliminarDelPedido(e.target.dataset.id);
         }
     });
-    
     whatsappBtn.addEventListener('click', (e) => {
         if (pedido.length === 0) {
             e.preventDefault();
             alert("Tu pedido está vacío. ¡Agrega algo antes de enviar!");
         }
     });
+    carouselImages.forEach(img => {
+        img.addEventListener('click', () => {
+            if (currentTooltip) currentTooltip.remove();
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.textContent = img.dataset.desc;
+            document.body.appendChild(tooltip);
+            const rect = img.getBoundingClientRect();
+            tooltip.style.left = `${rect.left + window.scrollX}px`;
+            tooltip.style.top = `${rect.bottom + window.scrollY + 8}px`;
+            currentTooltip = tooltip;
+        });
+    });
+    document.addEventListener('click', (e) => {
+        if (currentTooltip && !e.target.closest('.tooltip') && !e.target.closest('.carousel img')) {
+            currentTooltip.remove();
+            currentTooltip = null;
+        }
+    });
 
-    // --- INICIALIZACIÓN AL CARGAR LA PÁGINA ---
+    // =================================================
+    // INICIALIZACIÓN AL CARGAR LA PÁGINA
+    // =================================================
     actualizarPrecioPreview();
     renderizarPedido();
+    crearPopupSugerencia(); // <-- Se prepara el pop-up
+    mostrarAviso(); // <-- Se muestra el aviso de la tienda
+
 });
 </script>
+
 
 </body>
 </html>
