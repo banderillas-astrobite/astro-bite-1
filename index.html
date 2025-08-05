@@ -633,7 +633,7 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
 document.addEventListener('DOMContentLoaded', () => {
 
     // =================================================
-    // VARIABLES Y CONSTANTES GLOBALES
+    // 1. DECLARACIÓN DE VARIABLES Y CONSTANTES
     // =================================================
     const prices = {
         relleno: { Salchicha: 45, Combinada: 50, Queso: 55 },
@@ -655,10 +655,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const whatsappBtn = document.getElementById('whatsapp-order-btn');
     const extrasContainer = document.querySelector('.extras-grid');
     const carouselTrack = document.querySelector('.carousel-track');
-    const carouselImages = carouselTrack.querySelectorAll('img');
+    const carouselImages = carouselTrack ? carouselTrack.querySelectorAll('img') : [];
+    const formSugerencia = document.getElementById('form-sugerencia'); // <-- Ahora se declara aquí, seguro
 
     // =================================================
-    // FUNCIONES PRINCIPALES DE LA APLICACIÓN
+    // 2. DEFINICIÓN DE FUNCIONES
     // =================================================
 
     function actualizarPrecioPreview() {
@@ -718,20 +719,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderizarPedido() {
         cartItemsContainer.innerHTML = '';
+
         if (pedido.length === 0) {
             cartItemsContainer.innerHTML = '<p class="empty-cart-message">Tu pedido está vacío.</p>';
-            whatsappBtn.classList.add('disabled');
         } else {
-            whatsappBtn.classList.remove('disabled');
             pedido.forEach(item => {
                 const li = document.createElement('li');
                 li.innerHTML = `<span class="item-name">${item.nombre}</span><span class="item-price">$${item.precio.toFixed(2)}</span><button class="remove-item-btn" data-id="${item.id}">X</button>`;
                 cartItemsContainer.appendChild(li);
             });
         }
+        
         const total = pedido.reduce((sum, item) => sum + item.precio, 0);
         cartTotalPrice.textContent = `$${total.toFixed(2)}`;
+        
+        // Actualizamos el link y llamamos a la nueva función "jefe" del botón
         actualizarLinkWhatsApp();
+        actualizarEstadoWhatsappBtn(); 
     }
 
     function actualizarLinkWhatsApp() {
@@ -749,9 +753,34 @@ document.addEventListener('DOMContentLoaded', () => {
         whatsappBtn.href = whatsappURL;
     }
 
+    function actualizarEstadoWhatsappBtn() {
+        const tiendaAbierta = verificarHorario();
+        const agotado = false; // El mismo valor que usas en mostrarAviso
+
+        if (!tiendaAbierta) {
+            whatsappBtn.classList.add('disabled');
+            whatsappBtn.textContent = 'Tienda Cerrada';
+            return; // Detenemos la función aquí, esta condición tiene la máxima prioridad.
+        }
+
+        if (agotado) {
+            whatsappBtn.classList.add('disabled');
+            whatsappBtn.textContent = 'Producto Agotado';
+            return; // Segunda prioridad.
+        }
+
+        if (pedido.length === 0) {
+            whatsappBtn.classList.add('disabled');
+            whatsappBtn.textContent = 'Enviar Pedido por WhatsApp'; // Texto original
+        } else {
+            whatsappBtn.classList.remove('disabled');
+            whatsappBtn.textContent = 'Enviar Pedido por WhatsApp'; // Texto original
+        }
+    }
+
     function verificarHorario() {
         const ahora = new Date();
-        const dia = ahora.getDay(); // 0=domingo ... 6=sábado
+        const dia = ahora.getDay();
         const hora = ahora.getHours();
         return ([5, 6, 0].includes(dia)) && (hora >= 16 && hora < 21);
     }
@@ -760,119 +789,132 @@ document.addEventListener('DOMContentLoaded', () => {
         const avisoHorario = document.createElement('div');
         avisoHorario.style.cssText = `position: sticky; top: 0; width: 100%; z-index: 1000; background: #ffc107; color: #212529; padding: 15px; text-align: center; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.2);`;
         document.body.prepend(avisoHorario);
+        
         const tiendaAbierta = verificarHorario();
         const agotado = false; // CAMBIA ESTO A true CUANDO YA NO HAYA PRODUCTO
+
         if (!tiendaAbierta) {
             avisoHorario.textContent = "🚫 La tienda está cerrada. Horario: Viernes a Domingo de 4:00 PM a 9:00 PM.";
+            
+            // --- LÍNEA AÑADIDA ---
+            // Si la tienda está cerrada, deshabilitamos el botón de WhatsApp.
+            whatsappBtn.classList.add('disabled');
+            whatsappBtn.textContent = 'Tienda Cerrada'; // Cambiamos el texto para que sea claro
+
         } else if (agotado) {
             avisoHorario.textContent = "❌ Hoy ya se terminaron las banderillas. ¡Vuelve mañana!";
+            
+            // También deshabilitamos el botón si el producto está agotado
+            whatsappBtn.classList.add('disabled');
+            whatsappBtn.textContent = 'Producto Agotado';
+
         } else {
+            // Si la tienda está abierta y hay producto, quitamos el aviso.
             avisoHorario.remove();
+            // Y dejamos que la función renderizarPedido() controle el botón.
         }
     }
 
     function crearPopupSugerencia() {
+        if (document.getElementById('popup-sugerencia')) return;
         const popupHTML = `<div class="popup-overlay" id="popup-sugerencia"><div class="popup-content"><h3>¡Gracias!</h3><p>🐾 Tus comentarios nos ayudan a mejorar siempre.</p><button class="popup-close-btn">Entendido</button></div></div>`;
         document.body.insertAdjacentHTML('beforeend', popupHTML);
         const popup = document.getElementById('popup-sugerencia');
-        popup.querySelector('.popup-close-btn').addEventListener('click', () => popup.classList.remove('activa'));
+        const cerrarPopup = () => popup.classList.remove('active');
+        popup.querySelector('.popup-close-btn').addEventListener('click', cerrarPopup);
         popup.addEventListener('click', (e) => {
-            if (e.target.id === 'popup-sugerencia') popup.classList.remove('activa');
+            if (e.target.id === 'popup-sugerencia') cerrarPopup();
         });
     }
-
-    // --- NUEVO MANEJADOR PARA EL FORMULARIO DE SUGERENCIAS CON AJAX ---
-    const formSugerencia = document.getElementById('form-sugerencia');
-
-    formSugerencia.addEventListener('submit', function (event) {
-        event.preventDefault(); // ¡La línea más importante! Evita la redirección.
-
-        const botonSubmit = document.getElementById('sugerencia-btn');
-        const formData = new FormData(this); // Obtenemos los datos del formulario
-
-        // Deshabilitamos el botón mientras se envía
-        botonSubmit.disabled = true;
-        botonSubmit.textContent = 'Enviando...';
-
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Accept': 'application/json' // Clave para que FormSubmit no redirija
-            }
-        }).then(response => {
-            if (response.ok) {
-                // Si el envío fue exitoso, mostramos tu pop-up
-                const popup = document.getElementById('popup-sugerencia');
-                if (popup) {
-                    popup.classList.add('active');
-                }
-                formSugerencia.reset(); // Vaciamos el formulario
-            } else {
-                // Si hubo un error en la respuesta
-                alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
-            }
-        }).catch(error => {
-            // Si hubo un error de red
-            console.error('Error en el envío del formulario:', error);
-            alert('Hubo un error de red. Por favor, revisa tu conexión.');
-        }).finally(() => {
-            // Se ejecuta siempre, al final. Habilitamos el botón de nuevo.
-            botonSubmit.disabled = false;
-            botonSubmit.textContent = 'Enviar Comentario';
-        });
-    });
+    
     // =================================================
-    // ASIGNACIÓN DE EVENTOS (EVENT LISTENERS)
+    // 3. ASIGNACIÓN DE EVENTOS (EVENT LISTENERS)
     // =================================================
+    
     rellenoGroup.addEventListener('change', actualizarPrecioPreview);
     cubiertaGroup.addEventListener('change', actualizarPrecioPreview);
     papasBanderillaGroup.addEventListener('change', actualizarPrecioPreview);
     addBanderillaBtn.addEventListener('click', agregarBanderilla);
+    
     extrasContainer.addEventListener('click', (e) => {
         const botonPresionado = e.target.closest('.add-extra-btn');
         if (botonPresionado) {
             agregarExtra(botonPresionado.dataset.name, botonPresionado.dataset.price, botonPresionado);
         }
     });
+    
     cartItemsContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove-item-btn')) {
             eliminarDelPedido(e.target.dataset.id);
         }
     });
+
     whatsappBtn.addEventListener('click', (e) => {
         if (pedido.length === 0) {
             e.preventDefault();
             alert("Tu pedido está vacío. ¡Agrega algo antes de enviar!");
         }
     });
-    carouselImages.forEach(img => {
-        img.addEventListener('click', () => {
-            if (currentTooltip) currentTooltip.remove();
-            const tooltip = document.createElement('div');
-            tooltip.className = 'tooltip';
-            tooltip.textContent = img.dataset.desc;
-            document.body.appendChild(tooltip);
-            const rect = img.getBoundingClientRect();
-            tooltip.style.left = `${rect.left + window.scrollX}px`;
-            tooltip.style.top = `${rect.bottom + window.scrollY + 8}px`;
-            currentTooltip = tooltip;
+
+    if (formSugerencia) {
+        formSugerencia.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const botonSubmit = document.getElementById('sugerencia-btn');
+            const formData = new FormData(this);
+            botonSubmit.disabled = true;
+            botonSubmit.textContent = 'Enviando...';
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    const popup = document.getElementById('popup-sugerencia');
+                    if (popup) popup.classList.add('active');
+                    formSugerencia.reset();
+                } else {
+                    alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error de red. Por favor, revisa tu conexión.');
+            }).finally(() => {
+                botonSubmit.disabled = false;
+                botonSubmit.textContent = 'Enviar Comentario';
+            });
         });
-    });
-    document.addEventListener('click', (e) => {
-        if (currentTooltip && !e.target.closest('.tooltip') && !e.target.closest('.carousel img')) {
-            currentTooltip.remove();
-            currentTooltip = null;
-        }
-    });
+    }
+    
+    if(carouselImages.length > 0) {
+        carouselImages.forEach(img => {
+            img.addEventListener('click', () => {
+                if (currentTooltip) currentTooltip.remove();
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = img.dataset.desc;
+                document.body.appendChild(tooltip);
+                const rect = img.getBoundingClientRect();
+                tooltip.style.left = `${rect.left + window.scrollX}px`;
+                tooltip.style.top = `${rect.bottom + window.scrollY + 8}px`;
+                currentTooltip = tooltip;
+            });
+        });
+        document.addEventListener('click', (e) => {
+            if (currentTooltip && !e.target.closest('.tooltip') && !e.target.closest('.carousel img')) {
+                currentTooltip.remove();
+                currentTooltip = null;
+            }
+        });
+    }
 
     // =================================================
-    // INICIALIZACIÓN AL CARGAR LA PÁGINA
+    // 4. CÓDIGO DE INICIALIZACIÓN (SE EJECUTA AL FINAL)
     // =================================================
+    
     actualizarPrecioPreview();
     renderizarPedido();
-    crearPopupSugerencia(); // <-- Se prepara el pop-up
-    mostrarAviso(); // <-- Se muestra el aviso de la tienda
+    crearPopupSugerencia();
+    mostrarAviso();
 
 });
 </script>
