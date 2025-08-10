@@ -650,9 +650,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // =================================================
     const prices = {
         relleno: { Salchicha: 45, Combinada: 50, Queso: 55 },
+        cubiertaPapa: 5,
         cubiertaPremium: 10,
         papasConBanderilla: 15,
     };
+    const papaCubieta = ["Papa"]
     const premiumCubiertas = ["Cheetos", "Flamin' Hot"];
     let pedido = [];
     let currentTooltip = null;
@@ -683,6 +685,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let precioActual = prices.relleno[selectedRelleno.value];
         if (premiumCubiertas.includes(selectedCubierta.value)) {
             precioActual += prices.cubiertaPremium;
+        }
+        if (papaCubieta.includes(selectedCubierta.value)) {
+            precioActual += prices.cubiertaPapa;
         }
         if (selectedPapas && selectedPapas.value === 'si') {
             precioActual += prices.papasConBanderilla;
@@ -940,5 +945,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 </body>
-
 </html>
