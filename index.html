@@ -45,13 +45,13 @@
             background-size: 20px 20px; 
         }
 
-        /* --- TIPOGRAFÍA Y GENERALES --- */
+        /* --- TIPOGRAFÍA --- */
         h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 900; letter-spacing: -0.5px; margin: 0; color: var(--color-texto); }
         h1 { color: var(--color-rojo); }
         
         .title-container {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -71,12 +71,12 @@
 
         .highlight { color: var(--color-rojo); }
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        section { padding: 50px 0; }
+        section { padding: 40px 0; }
 
-        /* --- HERO SECTION --- */
+        /* --- HERO --- */
         #hero {
             position: relative;
-            min-height: 45vh;
+            min-height: 40vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -86,33 +86,33 @@
         }
         .logo-wrapper {
             background: var(--color-superficie); padding: 15px; border-radius: 50%;
-            box-shadow: 0 15px 35px rgba(255, 165, 2, 0.15); margin-bottom: 20px;
+            box-shadow: 0 15px 35px rgba(255, 165, 2, 0.15); margin-bottom: 15px;
             animation: floatDog 4s ease-in-out infinite;
         }
         @keyframes floatDog {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-10px) rotate(2deg); }
         }
-        .logo-image { width: 140px; height: auto; display: block; }
-        #hero h1 { font-size: clamp(2.5rem, 8vw, 4rem); line-height: 1.1; margin-bottom: 10px; }
-        #hero p.tagline { font-size: 1.1rem; font-weight: 600; color: var(--color-amarillo); }
+        .logo-image { width: 130px; height: auto; display: block; }
+        #hero h1 { font-size: clamp(2.2rem, 8vw, 3.5rem); line-height: 1.1; margin-bottom: 10px; }
+        #hero p.tagline { font-size: 1rem; font-weight: 600; color: var(--color-amarillo); }
 
-        /* --- CARRUSEL MENÚ --- */
-        .menu-carousel-section { background: var(--color-superficie); padding: 30px 0; margin: 20px 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); }
+        /* --- MENÚ CARRUSEL --- */
+        .menu-carousel-section { background: var(--color-superficie); padding: 25px 0; margin: 20px 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); }
         .carousel { overflow: hidden; width: 100%; position: relative; }
-        .carousel-track { display: flex; width: calc(200px * 10); animation: scroll 35s linear infinite; }
+        .carousel-track { display: flex; width: calc(180px * 10); animation: scroll 35s linear infinite; }
         .carousel img {
-            width: 160px; margin: 0 15px; border-radius: 20px;
+            width: 150px; margin: 0 10px; border-radius: 20px;
             box-shadow: var(--sombra-suave); transition: var(--transicion-suave); cursor: pointer; background: white; padding: 8px;
         }
         .carousel img:hover { transform: scale(1.05) rotate(-2deg); box-shadow: var(--sombra-hover); }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-190px * 5)); } }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-170px * 5)); } }
 
         /* ======================================================= */
-        /* ✅ GALERÍA CORREGIDA (FIX IMÁGENES) ✅ */
+        /* ✅ GALERÍA POLAROID (CORREGIDA FINAL) ✅ */
         /* ======================================================= */
         #galeria-real { 
-            padding: 20px 0 40px 0; 
+            padding: 10px 0 30px 0; 
             overflow: hidden; 
         }
 
@@ -120,7 +120,7 @@
             display: flex;
             gap: 20px;
             overflow-x: auto; 
-            padding: 30px 20px 50px 20px;
+            padding: 20px 20px 40px 20px;
             scroll-snap-type: x mandatory; 
             scrollbar-width: none; 
             -ms-overflow-style: none;
@@ -131,12 +131,15 @@
 
         .stream-item {
             position: relative;
-            /* Hacemos el contenedor un poco más alto para fotos verticales */
-            min-width: 70vw; 
-            height: 320px;   
+            
+            /* --- AJUSTE DE TAMAÑO PARA CELULAR --- */
+            /* Antes era muy ancho (70vw), ahora es más angosto (240px) */
+            min-width: 240px; 
+            height: 300px; /* Un poco menos alto para que no ocupe toda la pantalla */
+            
             background: white;
-            padding: 10px 10px 40px 10px; /* Marco blanco */
-            border-radius: 4px;
+            padding: 8px 8px 35px 8px; /* Simula el marco Polaroid */
+            border-radius: 6px;
             box-shadow: var(--sombra-suave);
             flex-shrink: 0; 
             scroll-snap-align: center;
@@ -151,14 +154,13 @@
             }
         }
 
-        /* --- LA CORRECCIÓN CLAVE --- */
+        /* --- AJUSTE DE IMAGEN --- */
         .stream-item img {
             width: 100%;
             height: 100%;
-            /* contain: Muestra la foto entera sin cortarla, ajustándose al espacio disponible */
-            object-fit: contain; 
-            border-radius: 2px;
-            background-color: #f0f0f0; /* Fondo gris sutil por si la foto no llena el cuadro */
+            object-fit: contain; /* Muestra toda la foto sin recortar */
+            border-radius: 4px;
+            background-color: white; /* ELIMINA EL FONDO GRIS: Ahora es blanco como el papel */
         }
 
         .stream-item:nth-child(odd) { transform: rotate(-2deg); }
@@ -177,12 +179,12 @@
             color: #555; font-size: 1.1rem; opacity: 0.9;
         }
         
-        .scroll-hint { text-align: center; color: var(--color-amarillo); font-weight: 700; font-size: 0.9rem; animation: pulse 2s infinite; margin-bottom: -10px; display: block;}
+        .scroll-hint { text-align: center; color: var(--color-amarillo); font-weight: 700; font-size: 0.85rem; animation: pulse 2s infinite; margin-bottom: -10px; display: block;}
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
 
         /* --- UI DEL PEDIDO --- */
-        .order-layout { display: grid; gap: 30px; }
+        .order-layout { display: grid; gap: 25px; }
         @media (min-width: 900px) { .order-layout { grid-template-columns: 1.6fr 1fr; align-items: start; } }
 
         .builder-options, .cart-container, #info, #quejas .container {
@@ -190,19 +192,19 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.06); border: 2px solid white;
         }
 
-        .step h3 { font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--color-rojo); }
-        .step-number { background: var(--color-amarillo); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; font-weight: 900; }
+        .step h3 { font-size: 1.15rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: var(--color-rojo); }
+        .step-number { background: var(--color-amarillo); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; font-weight: 900; }
 
-        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
         .options-grid input[type="radio"] { display: none; }
         .options-grid label {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px 8px; background: #f8f9fa; border: 2px solid transparent;
-            border-radius: 16px; cursor: pointer; transition: var(--transicion-suave);
-            font-weight: 700; font-size: 0.9rem; color: #888; height: 100%;
+            padding: 12px 5px; background: #f8f9fa; border: 2px solid transparent;
+            border-radius: 14px; cursor: pointer; transition: var(--transicion-suave);
+            font-weight: 700; font-size: 0.85rem; color: #888; height: 100%;
             box-shadow: 0 3px 8px rgba(0,0,0,0.03);
         }
-        .options-grid label i { font-size: 1.4rem; margin-bottom: 8px; color: #ccc; transition: var(--transicion-suave); }
+        .options-grid label i { font-size: 1.3rem; margin-bottom: 6px; color: #ccc; transition: var(--transicion-suave); }
         .options-grid input[type="radio"]:checked + label {
             border-color: var(--color-rojo); background-color: #fff0f2; color: var(--color-rojo);
             box-shadow: 0 6px 15px rgba(255, 71, 87, 0.2); transform: translateY(-3px);
@@ -213,32 +215,31 @@
             background: #fff0f2; padding: 20px; border-radius: 16px; margin-top: 25px;
             display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--color-rojo);
         }
-        #banderilla-price-preview { font-size: 1.6rem; font-weight: 900; }
+        #banderilla-price-preview { font-size: 1.5rem; font-weight: 900; }
 
         #add-banderilla-btn {
-            width: 100%; padding: 16px; margin-top: 20px; background: var(--color-rojo); color: white;
+            width: 100%; padding: 15px; margin-top: 20px; background: var(--color-rojo); color: white;
             font-weight: 800; font-size: 1.1rem; border-radius: 18px; transition: var(--transicion-elastica);
             box-shadow: var(--sombra-hover); border: none; cursor: pointer; position: relative; overflow: hidden;
         }
         #add-banderilla-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
-        #add-banderilla-btn.confirmed { background: #20bf6b; color: transparent; width: 55px; height: 55px; border-radius: 50%; padding: 0; margin-left: auto; margin-right: auto; }
+        #add-banderilla-btn.confirmed { background: #20bf6b; color: transparent; width: 50px; height: 50px; border-radius: 50%; padding: 0; margin-left: auto; margin-right: auto; }
         #add-banderilla-btn::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); color: white; font-size: 1.5rem; transition: 0.3s; }
         #add-banderilla-btn.confirmed::after { transform: translate(-50%, -50%) scale(1); }
 
-        /* --- EXTRAS & SALCHIPULPOS --- */
-        .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+        .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; }
         .extra-item {
-            background: white; border: 2px solid #f0f0f0; padding: 15px; border-radius: 20px; text-align: center;
+            background: white; border: 2px solid #f0f0f0; padding: 15px; border-radius: 18px; text-align: center;
             display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: var(--transicion-suave);
         }
         .extra-item:hover { border-color: var(--color-amarillo); box-shadow: var(--sombra-suave); }
-        .extra-item h4 { font-size: 1rem; margin-bottom: 5px; }
-        .extra-price-tag { color: var(--color-amarillo); font-weight: 800; font-size: 1rem; margin-bottom: 10px; display: block; }
+        .extra-item h4 { font-size: 0.95rem; margin-bottom: 5px; }
+        .extra-price-tag { color: var(--color-amarillo); font-weight: 800; font-size: 1rem; margin-bottom: 8px; display: block; }
 
-        .salchi-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; text-align: left; }
+        .salchi-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; text-align: left; }
         .salchi-options label {
-            display: flex; align-items: center; padding: 8px; background: #f9f9f9; border-radius: 10px;
-            cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: var(--transicion-suave);
+            display: flex; align-items: center; padding: 8px; background: #f9f9f9; border-radius: 8px;
+            cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: var(--transicion-suave);
         }
         .salchi-options input { margin-right: 8px; accent-color: var(--color-rojo); }
         .salchi-options label:hover, .salchi-options label:has(input:checked) { background: #fff0f2; color: var(--color-rojo); }
@@ -252,13 +253,12 @@
         .add-extra-btn::after, .add-special-extra-btn::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); color: white; font-weight: 900;}
         .add-extra-btn.confirmed::after, .add-special-extra-btn.confirmed::after { transform: translate(-50%, -50%) scale(1); }
 
-        /* --- TICKET --- */
         .cart-container { position: sticky; top: 15px; border: none; border-top: 5px solid var(--color-rojo); }
-        .cart-container h3 { text-align: center; font-size: 1.5rem; margin-bottom: 20px; color: var(--color-rojo); }
+        .cart-container h3 { text-align: center; font-size: 1.4rem; margin-bottom: 15px; color: var(--color-rojo); }
         #cart-items-container { list-style: none; padding: 0; margin: 0; }
         #cart-items-container li {
             display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px;
-            padding: 12px 0; border-bottom: 2px dashed #eee; font-size: 0.9rem;
+            padding: 10px 0; border-bottom: 2px dashed #eee; font-size: 0.9rem;
         }
         .item-name { font-weight: 600; line-height: 1.3; }
         .item-price { font-weight: 800; color: var(--color-rojo); white-space: nowrap; }
@@ -268,7 +268,7 @@
         }
         .remove-item-btn:hover { background: var(--color-rojo); color: white; }
         .cart-total { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 3px solid #eee; }
-        #cart-total-price { color: var(--color-rojo); font-size: 1.8rem; font-weight: 900; }
+        #cart-total-price { color: var(--color-rojo); font-size: 1.6rem; font-weight: 900; }
         #whatsapp-order-btn {
             display: flex; justify-content: center; align-items: center; gap: 10px;
             background: #25D366; color: white; text-decoration: none; padding: 16px;
@@ -278,7 +278,6 @@
         #whatsapp-order-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5); }
         #whatsapp-order-btn.disabled { background: #ccc; box-shadow: none; pointer-events: none; color: #666; }
 
-        /* --- INFO Y FOOTER --- */
         details { background: #f8f9fa; margin-bottom: 12px; border-radius: 14px; padding: 15px 20px; transition: var(--transicion-suave); cursor: pointer; border: 2px solid transparent; }
         details[open] { background: white; border-color: var(--color-amarillo); box-shadow: var(--sombra-suave); }
         summary { font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; }
@@ -291,27 +290,9 @@
 
         .tooltip { position: absolute; background: var(--color-rojo); color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; z-index: 1000; pointer-events: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: 600; }
         
-        /* ✅ CORRECCIÓN BUZÓN: Centrado */
-        #quejas .container {
-            text-align: center;
-            max-width: 600px;
-        }
-        #form-sugerencia {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-        #quejas textarea { 
-            width: 100%; 
-            padding: 16px; 
-            border-radius: 14px; 
-            border: 2px solid #eee; 
-            font-family: inherit; 
-            background: #f9f9f9; 
-            transition: 0.3s; 
-            font-size: 1rem;
-        }
+        #quejas .container { text-align: center; max-width: 600px; }
+        #form-sugerencia { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        #quejas textarea { width: 100%; padding: 16px; border-radius: 14px; border: 2px solid #eee; font-family: inherit; background: #f9f9f9; transition: 0.3s; font-size: 1rem; }
         #quejas textarea:focus { border-color: var(--color-amarillo); background: white; outline: none; }
         
         .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
