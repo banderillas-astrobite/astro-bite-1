@@ -3,567 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astro Bite - Arma tu Pedido</title>
+    <title>Astro Bite - Menú Digital</title>
     
     <link rel="icon" type="image/png" href="logo.png">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
-
-
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Chewy&display=swap" rel="stylesheet">
 
     <meta name="theme-color" content="#E63946">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-
-
     <link rel="manifest" href="manifest.json">
 
     <style>
-
-        .menu-carousel-section {
-  padding: 2rem;
-  background: #fff3e0;
-  text-align: center;
-}
-
-.menu-carousel-section h2 {
-  margin-bottom: 1rem;
-  color: #c62828;
-}
-/* ======================================================= /
-/  CÓDIGO CORREGIDO Y ROBUSTO PARA EL CARRUSEL INFINITO  /
-/ ======================================================= */
-
-/* 1. Definimos variables para controlar nuestro carrusel fácilmente */
-:root {
-  --image-width: 150px; /* Ancho de cada imagen */
-  --image-margin: 1rem;   /* Margen a cada lado de la imagen */
-}
-
-/* 2. El contenedor principal que oculta lo que no se ve */
-.carousel {
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  /* Un degradado suave en los bordes para un mejor efecto visual */
-  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%);
-}
-
-/* 3. La 'pista' que se moverá */
-.carousel-track {
-  display: flex; /* Ponemos los elementos en línea */
-  flex-shrink: 0; /* Evitamos que los elementos se encojan */
-  /* Calculamos el ancho total exacto de la pista (5 imágenes originales x 2 = 10) */
-  width: calc(10 * (var(--image-width) + (2 * var(--image-margin))));
-  /* Aquí aplicamos la animación */
-  animation: astro-scroll 20s linear infinite;
-}
-
-/* 4. Estilo para cada imagen del carrusel */
-.carousel img {
-  width: var(--image-width);
-  margin: 0 var(--image-margin);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.carousel img:hover {
-  transform: scale(1.05);
-}
-
-/* 5. La animación, ahora con un cálculo perfecto */
-@keyframes astro-scroll {
-  from {
-    /* Empezamos en la posición inicial */
-    transform: translateX(0);
-  }
-  to {
-    /* Movemos la pista una distancia EXACTA: el ancho de las 5 imágenes originales */
-    transform: translateX(calc(-1 * (5 * (var(--image-width) + (2 * var(--image-margin))))));
-  }
-}
-
-/* 6. Media Query para cambiar la velocidad en móvil (opcional) */
-@media (max-width: 768px) {
-  .carousel-track {
-    /* Hacemos la animación más rápida en móviles */
-    animation-duration: 15s;
-  }
-}
-
-/* 7. Pausar la animación al pasar el ratón por encima */
-.carousel:hover .carousel-track {
-  animation-play-state: paused;
-}
-
-/* Tooltip emergente */
-.tooltip {
-  position: absolute;
-  background-color: #fff;
-  color: #333;
-  padding: 10px 14px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  font-size: 0.9rem;
-  max-width: 200px;
-  z-index: 9999;
-}
-
-@keyframes fadein {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-
+        /* --- PALETA DE COLORES CÁLIDA Y AMIGABLE --- */
         :root {
-            --color-rojo: #E63946;
-            --color-amarillo: #FFC300;
-            --color-fondo: #F8F9FA;
-            --color-texto: #212529;
+            --color-rojo: #FF4757; 
+            --color-amarillo: #FFA502; 
+            --color-fondo: #FFF8E7;
+            --color-texto: #2F3542; 
             --color-superficie: #FFFFFF;
-            --sombra-suave: 0px 8px 24px rgba(149, 157, 165, 0.2);
+            --borde-redondo: 24px;
+            --sombra-suave: 0 8px 24px rgba(149, 157, 165, 0.15);
+            --sombra-hover: 0 20px 40px rgba(255, 71, 87, 0.4);
             --fuente-principal: 'Poppins', sans-serif;
+            --fuente-titulos: 'Poppins', sans-serif;
+            --transicion-suave: all 0.3s ease;
+            --transicion-elastica: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* --- Corrección de diseño del botón y reseteo general --- */
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-
+        
         body {
             font-family: var(--fuente-principal);
             background-color: var(--color-fondo);
             color: var(--color-texto);
             margin: 0;
             overflow-x: hidden;
-        }
-        
-        main > section { padding: 80px 20px; }
-        
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+            line-height: 1.6;
+            background-image: radial-gradient(var(--color-superficie) 20%, transparent 20%);
+            background-size: 20px 20px; 
         }
 
-        h1, h2, h3 { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); text-align: center; color: var(--color-rojo); line-height: 1.1; }
-        h2 { font-size: clamp(2rem, 6vw, 3rem); margin-bottom: 50px; text-align: center; }
-        h2 .highlight { color: var(--color-rojo); }
+        /* --- TIPOGRAFÍA Y GENERALES --- */
+        h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 900; letter-spacing: -0.5px; margin: 0; color: var(--color-texto); }
+        h1 { color: var(--color-rojo); }
+        h2 { font-size: clamp(2rem, 5vw, 2.8rem); margin-bottom: 40px; text-align: center; position: relative; display: inline-block; left: 50%; transform: translateX(-50%); }
+        
+        h2::after {
+            content: ''; position: absolute; bottom: -10px; left: 10%; width: 80%; height: 6px;
+            background: var(--color-amarillo); border-radius: 10px; opacity: 0.6;
+        }
 
-        /* --- SECCIÓN HERO --- */
-       #hero {
-    position: relative; 
-    
-    /* Mantenemos los estilos para centrar el contenido (el texto) */
-    color: var(--color-superficie);
-    padding: 150px 20px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
-    /* Importante: para que el fondo difuminado no se salga de los bordes. */
-    overflow: hidden; 
-}
+        .highlight { color: var(--color-rojo); }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 60px 0; }
 
-/* Paso 2: Creamos una "capa de fondo" virtual usando un pseudo-elemento. */
-#hero::before {
-    /* Esto es necesario para que el pseudo-elemento exista */
-    content: "";
+        /* --- HERO SECTION --- */
+        #hero {
+            position: relative;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 40px;
+        }
+        .logo-wrapper {
+            background: var(--color-superficie); padding: 20px; border-radius: 50%;
+            box-shadow: 0 15px 35px rgba(255, 165, 2, 0.15); margin-bottom: 25px;
+            animation: floatDog 4s ease-in-out infinite;
+        }
+        @keyframes floatDog {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        .logo-image { width: 160px; height: auto; display: block; }
+        #hero h1 { font-size: clamp(2.8rem, 8vw, 4.2rem); line-height: 1.1; margin-bottom: 15px; }
+        #hero p.tagline { font-size: 1.3rem; font-weight: 600; color: var(--color-amarillo); }
 
-    /* Aquí van todos los estilos de la IMAGEN DE FONDO */
-    background-image: url(banderillas.png); /* He subido tu imagen a un link público para asegurar que funcione */
-    background-size: contain;
-    background-position: center;
-    
-    /* Paso 3: APLICAMOS EL FILTRO DE DIFUMINADO SÓLO A ESTA CAPA */
-    filter: blur(5px); /* Puedes ajustar este valor (ej: 3px, 5px) */
+        /* --- CARRUSEL MENÚ --- */
+        .menu-carousel-section { background: var(--color-superficie); padding: 40px 0; margin: 20px 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); }
+        .carousel { overflow: hidden; width: 100%; position: relative; }
+        .carousel-track { display: flex; width: calc(220px * 10); animation: scroll 35s linear infinite; }
+        .carousel img {
+            width: 180px; margin: 0 20px; border-radius: var(--borde-redondo);
+            box-shadow: var(--sombra-suave); transition: var(--transicion-suave); cursor: pointer; background: white; padding: 10px;
+        }
+        .carousel img:hover { transform: scale(1.08) rotate(-2deg); box-shadow: var(--sombra-hover); }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-220px * 5)); } }
 
-    /* Hacemos que esta capa cubra todo el contenedor #hero */
-    position: absolute;
-    top: -10px;  /* Pequeño truco para evitar bordes nítidos por el blur */
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
+        /* ======================================================= */
+        /* ✅ GALERÍA "RÍO FLOTANTE" (HORIZONTAL STREAM) ✅ */
+        /* ======================================================= */
+        #galeria-real { 
+            padding: 40px 0; 
+            overflow: hidden; 
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.5), transparent);
+        }
 
-    /* Paso 4: Enviamos esta capa difuminada DETRÁS del contenido de #hero */
-    z-index: -1; 
-}
+        .stream-container {
+            display: flex;
+            gap: 40px; /* Espacio entre fotos */
+            overflow-x: auto; /* Permite scroll horizontal */
+            padding: 60px 40px; /* Mucho padding arriba/abajo para que el efecto POP no se corte */
+            scroll-snap-type: x mandatory; /* Para que se detenga bonito en móviles */
+            /* Ocultar barra de scroll fea pero mantener funcionalidad */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE */
+            cursor: grab;
+        }
+        .stream-container::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
 
-/* Este estilo asegura que el título H1 se mantenga nítido y legible */
-#hero h1 {
-    color: var(--color-superficie); /* Color blanco */
-    /* Sombra de texto fuerte para máximo contraste y legibilidad */
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); 
-}
-
-/* ======================================= /
-/ SECCIÓN DEL LOGO                      /
-/ ======================================= */
-
-.logo-image {
-max-width: 200px; /* Establece un ancho máximo para pantallas grandes */
-height: auto; /* Mantiene la proporción del logo */
-display: block; /* Evita espaciados extra alrededor de la imagen */
-margin: 0 auto; /* Centra la imagen dentro de su contenedor */
-}
-
-/* Media query para pantallas más pequeñas (teléfonos) */
-@media (max-width: 600px) {
-.logo-image {
-max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
-}
-}
-
-
-        /* --- SECCIÓN DE PEDIDO PRINCIPAL --- */
-        .order-layout { display: grid; grid-template-columns: 1fr; gap: 40px; }
-        @media (min-width: 900px) { .order-layout { grid-template-columns: 1fr 1fr; } }
-
-        .builder-options, .cart-container {
-            background: var(--color-superficie); padding: 30px; border-radius: 20px;
+        .stream-item {
+            position: relative;
+            min-width: 280px; /* Ancho fijo para que no se aplasten */
+            height: 380px;
+            background: white;
+            padding: 10px 10px 40px 10px; /* Efecto Polaroid: más espacio abajo */
+            border-radius: 4px;
             box-shadow: var(--sombra-suave);
+            flex-shrink: 0; /* IMPEDIR que se encojan */
+            scroll-snap-align: center;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
+            transform-origin: center center;
+        }
+
+        .stream-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+            filter: sepia(0.1); /* Un toquecito retro sutil */
+        }
+
+        /* --- ROTACIONES CAÓTICAS (Para que se vea natural) --- */
+        .stream-item:nth-child(odd) { transform: rotate(-3deg); }
+        .stream-item:nth-child(even) { transform: rotate(2deg) translateY(15px); }
+        .stream-item:nth-child(3n) { transform: rotate(-1deg) translateY(-10px); }
+        .stream-item:nth-child(5n) { transform: rotate(4deg); }
+
+        /* --- EFECTO HOVER 3D (POP OUT) --- */
+        .stream-item:hover {
+            transform: scale(1.15) rotate(0deg) translateY(0) !important;
+            z-index: 100;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            filter: sepia(0) brightness(1.1);
+        }
+
+        /* Desenfoque de los demás */
+        .stream-container:hover .stream-item:not(:hover) {
+            filter: blur(2px) grayscale(0.5);
+            opacity: 0.8;
+            transform: scale(0.95);
         }
         
-        .step { margin-bottom: 25px; }
-        .step h3 { 
-            font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; color: var(--color-rojo); 
-            text-transform: none; border-bottom: 2px solid #eee; padding-bottom: 10px;
+        /* Texto manuscrito debajo de la foto (Polaroid style) */
+        .polaroid-caption {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Chewy', cursive; /* Fuente divertida */
+            color: #555;
+            font-size: 1.2rem;
+            opacity: 0.8;
         }
         
-        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+        /* Indicador de scroll */
+        .scroll-hint { text-align: center; color: var(--color-amarillo); font-weight: 700; font-size: 0.9rem; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+
+        /* --- UI DEL PEDIDO --- */
+        .order-layout { display: grid; gap: 40px; }
+        @media (min-width: 900px) { .order-layout { grid-template-columns: 1.6fr 1fr; align-items: start; } }
+
+        .builder-options, .cart-container, #info, #quejas .container {
+            background: var(--color-superficie); padding: 35px; border-radius: 30px;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); border: 2px solid white;
+        }
+
+        .step h3 { font-size: 1.3rem; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; color: var(--color-rojo); }
+        .step-number { background: var(--color-amarillo); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1rem; font-weight: 900; }
+
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 15px; }
         .options-grid input[type="radio"] { display: none; }
         .options-grid label {
-            display: block; padding: 15px; border: 2px solid #ddd; border-radius: 10px;
-            text-align: center; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 18px 10px; background: #f8f9fa; border: 2px solid transparent;
+            border-radius: 20px; cursor: pointer; transition: var(--transicion-suave);
+            font-weight: 700; font-size: 0.95rem; color: #888; height: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
-        .options-grid label:hover { border-color: var(--color-amarillo); color: var(--color-rojo); }
+        .options-grid label i { font-size: 1.6rem; margin-bottom: 10px; color: #ccc; transition: var(--transicion-suave); }
+        .options-grid label:hover { background: #fff0f2; }
         .options-grid input[type="radio"]:checked + label {
-            background-color: var(--color-amarillo); border-color: var(--color-rojo);
-            color: var(--color-texto); transform: translateY(-2px);
+            border-color: var(--color-rojo); background-color: #fff0f2; color: var(--color-rojo);
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.2); transform: translateY(-4px);
         }
+        .options-grid input[type="radio"]:checked + label i { color: var(--color-rojo); }
 
         .banderilla-preview {
-            background-color: var(--color-fondo); padding: 15px; border-radius: 10px;
-            margin-top: 20px; text-align: center;
+            background: #fff0f2; padding: 25px; border-radius: 20px; margin-top: 30px;
+            display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--color-rojo);
         }
-        .banderilla-preview span { font-weight: 700; font-size: 1.2rem; }
-        #banderilla-price-preview { color: var(--color-rojo); margin-left: 10px; }
+        #banderilla-price-preview { font-size: 1.8rem; font-weight: 900; }
 
         #add-banderilla-btn {
-            display: block; width: 100%; padding: 18px; text-align: center; margin-top: 20px;
-            background: #28a745; color: white; border: none; border-radius: 12px;
-            font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            width: 100%; padding: 18px; margin-top: 25px; background: var(--color-rojo); color: white;
+            font-weight: 800; font-size: 1.2rem; border-radius: 20px; transition: var(--transicion-elastica);
+            box-shadow: var(--sombra-hover); border: none; cursor: pointer; position: relative; overflow: hidden;
         }
-        #add-banderilla-btn:hover { background: #218838; transform: scale(1.03); }
+        #add-banderilla-btn:hover { transform: scale(1.03); filter: brightness(1.1); }
+        #add-banderilla-btn.confirmed { background: #20bf6b; color: transparent; width: 60px; height: 60px; border-radius: 50%; padding: 0; margin-left: auto; margin-right: auto; }
+        #add-banderilla-btn::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); color: white; font-size: 1.8rem; transition: 0.3s; }
+        #add-banderilla-btn.confirmed::after { transform: translate(-50%, -50%) scale(1); }
 
-        /* --- ESTILOS PARA LA ANIMACIÓN DEL BOTÓN DE AGREGAR --- */
+        /* --- EXTRAS --- */
+        .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; }
+        .extra-item {
+            background: white; border: 2px solid #f0f0f0; padding: 20px; border-radius: 24px; text-align: center;
+            display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: var(--transicion-suave);
+        }
+        .extra-item:hover { border-color: var(--color-amarillo); box-shadow: var(--sombra-suave); }
+        .extra-item h4 { font-size: 1.1rem; margin-bottom: 5px; }
+        .extra-price-tag { color: var(--color-amarillo); font-weight: 800; font-size: 1.1rem; margin-bottom: 15px; display: block; }
 
-/* 1. Preparamos el botón original para la transición */
-#add-banderilla-btn {
-  /* ... (tus estilos existentes como background, color, etc. se mantienen) ... */
-  position: relative; /* Necesario para posicionar la palomita */
-  overflow: hidden;   /* Oculta el texto que se sale al encogerse */
-  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1); /* Transición suave */
-}
+        .salchi-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; text-align: left; }
+        .salchi-options label {
+            display: flex; align-items: center; padding: 10px; background: #f9f9f9; border-radius: 12px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: var(--transicion-suave);
+        }
+        .salchi-options input { margin-right: 10px; accent-color: var(--color-rojo); }
+        .salchi-options label:hover, .salchi-options label:has(input:checked) { background: #fff0f2; color: var(--color-rojo); }
 
-/* 2. Definimos el estado 'confirmado' del botón */
-#add-banderilla-btn.confirmed {
-  width: 60px; /* Ancho fijo para hacerlo un círculo perfecto */
-  height: 60px; /* Misma altura que el ancho */
-  border-radius: 50%; /* Esto lo hace redondo */
-  padding: 0;
-  color: transparent; /* Ocultamos el texto original */
-}
+        .add-extra-btn, .add-special-extra-btn {
+            background: var(--color-amarillo); color: var(--color-texto); font-weight: 700; border: none;
+            padding: 12px; border-radius: 12px; width: 100%; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer;
+        }
+        .add-extra-btn:hover, .add-special-extra-btn:hover { filter: brightness(1.08); transform: translateY(-2px); }
+        .add-extra-btn.confirmed, .add-special-extra-btn.confirmed { width: 40px; height: 40px; border-radius: 50%; padding: 0; color: transparent; background: #20bf6b; align-self: center; margin: 0 auto;}
+        .add-extra-btn::after, .add-special-extra-btn::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); color: white; font-weight: 900;}
+        .add-extra-btn.confirmed::after, .add-special-extra-btn.confirmed::after { transform: translate(-50%, -50%) scale(1); }
 
-/* 3. Creamos la palomita con un pseudo-elemento (::after) */
-#add-banderilla-btn::after {
-  content: '✓'; /* El símbolo de la palomita */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0); /* Empieza invisible y escalado a 0 */
-  color: white;
-  font-size: 2rem; /* Tamaño de la palomita */
-  font-weight: 900;
-  transition: transform 0.3s ease-in-out 0.2s; /* La palomita aparece con un ligero retraso */
-}
-
-/* 4. Hacemos visible la palomita cuando el botón tiene la clase .confirmed */
-#add-banderilla-btn.confirmed::after {
-  transform: translate(-50%, -50%) scale(1); /* Hacemos la palomita visible */
-}
-
-/* 5. Evitamos efectos de hover mientras el botón está deshabilitado durante la animación */
-#add-banderilla-btn:disabled {
-  background: #218838; /* Mantenemos el color de éxito */
-  transform: none;
-  cursor: not-allowed;
-}
-
-        .extras-container .step h3 { margin-top: 40px; }
-        .extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .extra-item { text-align: center; padding: 15px; border: 2px solid #eee; border-radius: 10px; }
-        .extra-item p { margin: 0 0 10px 0; font-weight: 700; }
-        /* --- ESTILOS PARA LA ANIMACIÓN DE LOS BOTONES DE EXTRAS --- */
-
-/* 1. Preparamos el botón original para la transición */
-.add-extra-btn {
-  /* ... (tus estilos existentes como background, color, etc. se mantienen) ... */
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: var(--color-amarillo);
-  color: var(--color-texto);
-  font-weight: 700;
-  cursor: pointer;
-  position: relative; /* Necesario para la palomita */
-  overflow: hidden;   /* Oculta el texto que se sale */
-  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-
-/* 2. Definimos el estado 'confirmado' */
-.add-extra-btn.confirmed {
-  width: 44px;  /* Un poco más pequeño que el botón principal */
-  height: 44px;
-  border-radius: 50%;
-  padding: 0;
-  background-color: #28a745; /* Color de éxito verde */
-  color: transparent;
-}
-
-/* 3. Creamos la palomita (funciona igual que antes) */
-.add-extra-btn::after {
-  content: '✓';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  color: white;
-  font-size: 1.5rem; /* Un poco más pequeña */
-  font-weight: 900;
-  transition: transform 0.3s ease-in-out 0.2s;
-}
-
-/* 4. Hacemos visible la palomita en el estado 'confirmado' */
-.add-extra-btn.confirmed::after {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* 5. Estilos para el botón deshabilitado durante la animación */
-.add-extra-btn:disabled {
-  background: #28a745;
-  transform: none;
-  cursor: not-allowed;
-}
-
-/* Borra la regla de hover que tenías antes (.add-extra-btn:hover)
-   y usa esta para evitar el efecto mientras está deshabilitado */
-.add-extra-btn:not(:disabled):hover {
-  transform: scale(1.05);
-}
-
-        /* --- CARRITO DE PEDIDO --- */
-        .cart-container h3 { text-align: center; }
-        #cart-items-container { list-style: none; padding: 0; margin: 0; min-height: 60px; }
+        /* --- TICKET ALINEADO --- */
+        .cart-container { position: sticky; top: 20px; border: none; border-top: 6px solid var(--color-rojo); }
+        .cart-container h3 { text-align: center; font-size: 1.6rem; margin-bottom: 25px; color: var(--color-rojo); }
+        #cart-items-container { list-style: none; padding: 0; margin: 0; }
         #cart-items-container li {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 5px; border-bottom: 1px solid #eee;
+            display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px;
+            padding: 15px 0; border-bottom: 2px dashed #eee; font-size: 0.95rem;
         }
-        #cart-items-container .item-name { flex-grow: 1; }
-        #cart-items-container .item-price { font-weight: 700; margin: 0 15px; }
+        .item-name { font-weight: 600; line-height: 1.3; }
+        .item-price { font-weight: 800; color: var(--color-rojo); white-space: nowrap; }
         .remove-item-btn {
-            background: #dc3545; color: white; border: none; width: 28px; height: 28px;
-            border-radius: 50%; font-weight: 900; font-size: 1rem; cursor: pointer;
-            line-height: 28px; text-align: center; transition: all 0.2s ease;
+            background: #ffdae0; color: var(--color-rojo); width: 28px; height: 28px; border-radius: 50%; border: none;
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: var(--transicion-suave); cursor: pointer;
         }
-        .remove-item-btn:hover { background: #c82333; transform: scale(1.1); }
-        .cart-total { margin-top: 20px; text-align: right; }
-        #cart-total-price { font-size: 2.5rem; font-weight: 900; color: var(--color-rojo); }
+        .remove-item-btn:hover { background: var(--color-rojo); color: white; }
+        .cart-total { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-top: 20px; border-top: 3px solid #eee; }
+        #cart-total-price { color: var(--color-rojo); font-size: 2rem; font-weight: 900; }
         #whatsapp-order-btn {
-            display: block; width: 100%; padding: 18px; text-align: center; background: var(--color-rojo);
-            color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700;
-            text-decoration: none; transition: all 0.3s ease; margin-top: 20px;
-            box-shadow: 0 4px 15px #e6394666;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            background: #25D366; color: white; text-decoration: none; padding: 18px;
+            border-radius: 20px; font-weight: 800; font-size: 1.1rem; margin-top: 25px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3); transition: var(--transicion-elastica);
         }
-        #whatsapp-order-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px #e6394688; }
-        .empty-cart-message { color: #6c757d; text-align: center; padding: 20px; }
-        #whatsapp-order-btn.disabled { background: #6c757d; cursor: not-allowed; box-shadow: none; pointer-events: none;}
+        #whatsapp-order-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5); }
+        #whatsapp-order-btn.disabled { background: #ccc; box-shadow: none; pointer-events: none; color: #666; }
 
-        /* --- SECCIÓN DE INFORMACIÓN ADICIONAL --- */
-        #info { background-color: var(--color-superficie); }
-        .faq-container { width: 100%; max-width: 800px; margin: 0 auto; }
-        details {
-            background: var(--color-fondo); border: 1px solid #eee; border-radius: 10px;
-            margin-bottom: 15px; padding: 20px;
-        }
-        summary {
-            font-weight: 700; font-size: 1.2rem; cursor: pointer; list-style: none;
-        }
-        summary::-webkit-details-marker { display: none; }
-        summary::after {
-            content: '+'; float: right; font-size: 1.5rem; color: var(--color-rojo);
-            transition: transform 0.3s;
-        }
-        details[open] summary::after { transform: rotate(45deg); }
-        details > p { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
-        details a { color: var(--color-rojo); font-weight: 700; }
+        /* --- INFO Y FOOTER --- */
+        details { background: #f8f9fa; margin-bottom: 15px; border-radius: 16px; padding: 18px 25px; transition: var(--transicion-suave); cursor: pointer; border: 2px solid transparent; }
+        details[open] { background: white; border-color: var(--color-amarillo); box-shadow: var(--sombra-suave); }
+        summary { font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; }
+        summary::after { content: '\f078'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--color-amarillo); transition: transform 0.3s; }
+        details[open] summary::after { transform: rotate(180deg); }
         
-        /* --- FOOTER --- */
-        footer {
-            background-color: var(--color-texto); color: var(--color-fondo);
-            text-align: center; padding: 40px 20px;
-        }
-        footer a { 
-            color: white;
-         }
+        footer { background: var(--color-texto); color: white; text-align: center; padding: 60px 20px; margin-top: 60px; border-top-left-radius: 40px; border-top-right-radius: 40px; }
+        footer a { color: white; font-size: 1.8rem; margin: 0 12px; transition: 0.3s; display: inline-block; }
+        footer a:hover { color: var(--color-amarillo); transform: scale(1.2); }
 
-        /* --- ESTILOS PARA EL POP-UP DE AGRADECIMIENTO --- */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 2000;
-  display: none; /* Oculto por defecto */
-  align-items: center;
-  justify-content: center;
-}
-
-.popup-overlay.active {
-  display: flex; /* Se hace visible al agregar la clase 'active' */
-}
-
-.popup-content {
-  background: var(--color-superficie);
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-  text-align: center;
-  width: 90%;
-  max-width: 400px;
-  color: var(--color-texto);
-}
-
-.popup-content h3 {
-  color: var(--color-rojo);
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.8rem;
-}
-
-.popup-content p {
-  margin-bottom: 25px;
-  font-size: 1.1rem;
-}
-
-.popup-close-btn {
-  background: var(--color-rojo);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 25px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: transform 0.2s;
-}
-
-.popup-close-btn:hover {
-  transform: scale(1.05);
-}         
-
+        .tooltip { position: absolute; background: var(--color-rojo); color: white; padding: 10px 15px; border-radius: 10px; font-size: 0.9rem; z-index: 1000; pointer-events: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: 600; }
+        #quejas textarea { width: 100%; padding: 18px; border-radius: 16px; border: 2px solid #eee; font-family: inherit; background: #f9f9f9; transition: 0.3s; }
+        #quejas textarea:focus { border-color: var(--color-amarillo); background: white; outline: none; }
+        
+        .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .popup-overlay.active { display: flex; }
+        .popup-content { background: white; padding: 40px; border-radius: 30px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .popup-close-btn { margin-top: 25px; padding: 12px 35px; background: var(--color-amarillo); color: var(--color-texto); border-radius: 50px; font-weight: 800; font-size: 1rem; transition: 0.3s; cursor: pointer; border: none; }
     </style>
 </head>
 <body>
 
 <main>
     <section id="hero">
-        <h1>Tu Banderilla Coreana,<br>Crujiente y Perfecta</h1>
-        <div class="container">
-        <img src="logo.png" alt="Logo de Astro Bite" class="logo-image">
+        <div class="logo-wrapper">
+            <img src="logo.png" alt="Logo de Astro Bite" class="logo-image">
+        </div>
+        <h1>¡Las Banderillas<br><span class="highlight">Favoritas de Astro!</span> 🐾</h1>
+        <p class="tagline">Crujientes, deliciosas y hechas con amor.</p>
+    </section>
+
+    <section class="menu-carousel-section">
+        <h2 style="margin-bottom:30px;">Nuestras Estrellas ⭐</h2>
+        <div class="carousel" id="banderilla-carousel">
+            <div class="carousel-track">
+                <img src="cruji.png" alt="Banderilla Cruji" data-desc="La Clásica: Salchicha o queso con panko doradito.">
+                <img src="ramen.png" alt="Banderilla Ramen" data-desc="¡Súper crujiente con trocitos de ramen!">
+                <img src="papa.png" alt="Banderilla Papa" data-desc="Cubierta de cubitos de papa. ¡Insuperable!">
+                <img src="cheetos.png" alt="Banderilla Cheetos" data-desc="Explosión de sabor a queso intenso.">
+                <img src="flamin hot.png" alt="Banderilla Flamin Hot" data-desc="¿Te atreves? Picosita y deliciosa.">
+                <img src="cruji.png" alt="Banderilla Cruji" data-desc="La Clásica: Salchicha o queso con panko doradito.">
+                <img src="ramen.png" alt="Banderilla Ramen" data-desc="¡Súper crujiente con trocitos de ramen!">
+                <img src="papa.png" alt="Banderilla Papa" data-desc="Cubierta de cubitos de papa. ¡Insuperable!">
+                <img src="cheetos.png" alt="Banderilla Cheetos" data-desc="Explosión de sabor a queso intenso.">
+                <img src="flamin hot.png" alt="Banderilla Flamin Hot" data-desc="¿Te atreves? Picosita y deliciosa.">
+            </div>
         </div>
     </section>
 
-    <!-- MENÚ COMPLETO -->
-    <section class="menu-carousel-section">
-  <h2>TODAS NUESTRAS BANDERILLAS</h2>
-  <div class="carousel" id="banderilla-carousel">
-    <div class="carousel-track">
-      <img src="cruji.png" alt="Banderilla Cruji" data-desc=" Clásica y deliciosa: salchicha, queso o combinada envuelta en masa crujiente con panko doradito.">
-      <img src="ramen.png" alt="Banderilla Ramen" data-desc=" Salchicha, queso o combinada con una capa perfecta de ramen.">
-      <img src="papa.png" alt="Banderilla Papa" data-desc=" Salchicha, queso o combinada, cubierta de cubitos de papa y un toque de panko, deliciosa y crujiente en cada bocado">
-      <img src="cheetos.png" alt="Banderilla Cheetos" data-desc="Cheetos por fuera, queso por dentro. Explosiva, crujiente y adictiva. ¡Atrévete a probarla!... Pidela tambien con relleno de salchicha o combinada">
-      <img src="flamin hot.png" alt="Banderilla Flamin Hot" data-desc="Banderilla crujiente cubierta con los originales cheetos flamin' hot ¡Arde sabroso!">
+    <section id="galeria-real">
+        <div class="container" style="max-width: 100%; padding: 0;">
+            <h2>📸 Momentos <span class="highlight">Astro Bite</span></h2>
+            <p class="scroll-hint">⏪ Desliza para ver más ⏩</p>
+            
+            <div class="stream-container">
+                
+                <div class="stream-item">
+                    <img src="real_astro.jpg" alt="Foto astro">
+                    <div class="polaroid-caption">El es Astro🐶 (CEO de AstroBite) </div>
+                </div>
 
-      <img src="cruji.png" alt="Banderilla Cruji" data-desc=" Clásica y deliciosa: salchicha, queso o combinada envuelta en masa crujiente con panko doradito.">
-      <img src="ramen.png" alt="Banderilla Ramen" data-desc=" Salchicha, queso o combinada con una capa perfecta de ramen.">
-      <img src="papa.png" alt="Banderilla Papa" data-desc=" Salchicha, queso o combinada, cubierta de cubitos de papa y un toque de panko, deliciosa y crujiente en cada bocado">
-      <img src="cheetos.png" alt="Banderilla Cheetos" data-desc="Cheetos por fuera, queso por dentro. Explosiva, crujiente y adictiva. ¡Atrévete a probarla!... Pidela tambien con relleno de salchicha o combinada">
-      <img src="flamin hot.png" alt="Banderilla Flamin Hot" data-desc="Banderilla crujiente cubierta con los originales cheetos flamin' hot ¡Arde sabroso!">
+                <div class="stream-item">
+                    <img src="real_puesto.jpg" alt="Foto astro">
+                    <div class="polaroid-caption"> Aqui se hace toda la magia 🐶</div>
+                </div>
 
+                <div class="stream-item">
+                    <img src="real_aceite_2.jpg" alt="Foto astro">
+                    <div class="polaroid-caption"> Deliciosas y calientitas 🐶</div>
+                </div>
 
-    </div>
-  </div>
-</section>
+                <div class="stream-item">
+                    <img src="real_varias.jpg" alt="Foto Cliente">
+                    <div class="polaroid-caption"> Para que no te quedes con el antojo</div>
+                </div>
+
+                <div class="stream-item">
+                    <img src="real_cheetos.jpg" alt="Queso">
+                    <div class="polaroid-caption">Queso infinito 🧀</div>
+                </div>
+
+                <div class="stream-item">
+                    <img src="real_ramen.jpg" alt="Cocina">
+                    <div class="polaroid-caption">Será la mas crujiente? 🍜</div>
+                </div>
+
+                <div class="stream-item">
+                    <img src="flamin_real.jpg" alt="Flamin">
+                    <div class="polaroid-caption">¡Pica Rico! 🔥</div>
+                </div>
+
+                <div class="stream-item">
+                    <img src="real_aceite.jpg" alt="Equipo">
+                    <div class="polaroid-caption">Hecho con Amor ❤️</div>
+                </div>
+
+                <div class="stream-item">
+                    <img src="real_fh_cruji_ep.jpg" alt="Ejemplo">
+                    <div class="polaroid-caption">Team cruji o picante? ✨</div>
+                </div>
+
+                 <div class="stream-item">
+                    <img src="real_favoritas.jpg" alt="Ejemplo">
+                    <div class="polaroid-caption">La Favorita de muchos </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <section id="order">
         <div class="container">
-            <h2>🐾¡Arma tu <span class="highlight">Pedido</span>! 🐾</h2>
+            <h2>🦴 Arma tu <span class="highlight">Pedido</span></h2>
+            
             <div class="order-layout">
-                
                 <div class="builder-container">
                     <div class="builder-options">
+                        
                         <div class="step">
-                            <h3>1. Arma tu Banderilla</h3>
+                            <h3><span class="step-number">1</span> Elige el Relleno</h3>
                             <div class="options-grid" id="relleno-group">
-                                <input type="radio" id="r-salchicha" name="relleno" value="Salchicha"><label for="r-salchicha">Salchicha</label>
-                                <input type="radio" id="r-queso" name="relleno" value="Queso"><label for="r-queso">Queso</label>
-                                <input type="radio" id="r-combinada" name="relleno" value="Combinada" checked><label for="r-combinada">Combinada</label>
-                            </div>
-                            <br>
-                            <div class="options-grid" id="cubierta-group">
-                                <input type="radio" id="c-panko" name="cubierta" value="Panko" checked><label for="c-panko">Panko</label>
-                                <input type="radio" id="c-papa" name="cubierta" value="Papa"><label for="c-papa">Papa</label>
-                                <input type="radio" id="c-ramen" name="cubierta" value="Ramen"><label for="c-ramen">Ramen</label>
-                                <input type="radio" id="c-cheetos" name="cubierta" value="Cheetos"><label for="c-cheetos">Cheetos</label>
-                                <input type="radio" id="c-flamin" name="cubierta" value="Flamin' Hot"><label for="c-flamin">Flamin' Hot</label>
+                                <input type="radio" id="r-salchicha" name="relleno" value="Salchicha">
+                                <label for="r-salchicha"><i class="fas fa-drumstick-bite"></i>Salchicha</label>
+                                <input type="radio" id="r-queso" name="relleno" value="Queso">
+                                <label for="r-queso"><i class="fas fa-cheese"></i>Queso</label>
+                                <input type="radio" id="r-combinada" name="relleno" value="Combinada" checked>
+                                <label for="r-combinada"><i class="fas fa-arrows-alt-h"></i>Combinada</label>
                             </div>
                         </div>
 
-                        <div class="step">
-                            <h3>2. ¿Le agregas Papas?</h3>
+                        <div class="step" style="margin-top: 35px;">
+                            <h3><span class="step-number">2</span> Elige la Cobertura</h3>
+                            <div class="options-grid" id="cubierta-group">
+                                <input type="radio" id="c-panko" name="cubierta" value="Panko" checked>
+                                <label for="c-panko">🍞 Panko</label>
+                                <input type="radio" id="c-papa" name="cubierta" value="Papa">
+                                <label for="c-papa">🥔 Papa</label>
+                                <input type="radio" id="c-ramen" name="cubierta" value="Ramen">
+                                <label for="c-ramen">🍜 Ramen</label>
+                                <input type="radio" id="c-cheetos" name="cubierta" value="Cheetos">
+                                <label for="c-cheetos">🧀 Cheetos</label>
+                                <input type="radio" id="c-flamin" name="cubierta" value="Flamin' Hot">
+                                <label for="c-flamin">🔥 Flamin'</label>
+                            </div>
+                        </div>
+
+                        <div class="step" style="margin-top: 35px;">
+                            <h3><span class="step-number">3</span> ¿Acompañas con Papas?</h3>
                             <div class="options-grid" id="papas-banderilla-group">
-                                <input type="radio" id="p-bande-si" name="papas-banderilla" value="si"><label for="p-bande-si">Sí (+ $15)</label>
-                                <input type="radio" id="p-bande-no" name="papas-banderilla" value="no" checked><label for="p-bande-no">No, gracias</label>
+                                <input type="radio" id="p-bande-si" name="papas-banderilla" value="si">
+                                <label for="p-bande-si" style="background:#fff8e1;"><i class="fas fa-check" style="color:green;"></i> Sí (+$15)</label>
+                                <input type="radio" id="p-bande-no" name="papas-banderilla" value="no" checked>
+                                <label for="p-bande-no"><i class="fas fa-times"></i> No, gracias</label>
                             </div>
                         </div>
 
                         <div class="banderilla-preview">
-                            <span>Precio de esta Banderilla:</span>
+                            <span>Costo de esta Banderilla:</span>
                             <span id="banderilla-price-preview">$0.00</span>
                         </div>
-                        <button id="add-banderilla-btn">Agregar Banderilla</button>
+                        <button id="add-banderilla-btn">¡Agregar a la Canasta! 🐾</button>
 
-                        <div class="extras-container">
-                             <div class="step">
-                                <h3>3. Agrega Extras</h3>
+                        <div class="extras-section-wrapper" style="margin-top: 50px; border-top: 3px dotted #eee; padding-top: 30px;">
+                            <div class="step">
+                                <h3><i class="fas fa-plus-circle" style="color: var(--color-amarillo);"></i> Antojos Extra</h3>
                                 <div class="extras-grid">
-                                    <div class="extra-item"><p>Salchipulpos ($35)</p><button class="add-extra-btn" data-name="Salchipulpos" data-price="35">Agregar</button></div>
-                                    <div class="extra-item"><p>Papas a la Francesa ($40)</p><button class="add-extra-btn" data-name="Papas a la Francesa" data-price="40">Agregar</button></div>
+                                    <div class="extra-item special-extra-container">
+                                        <h4>🐙 Salchipulpos</h4>
+                                        <div class="salchi-options">
+                                            <label><input type="radio" name="salchi-type" value="solo" checked> Solitos ($35)</label>
+                                            <label><input type="radio" name="salchi-type" value="con-papas"> Con Papas (+$15)</label>
+                                        </div>
+                                        <button class="add-special-extra-btn" data-name="Salchipulpos">Agregar</button>
+                                    </div>
+                                    <div class="extra-item">
+                                        <h4>🍟 Papas a la Francesa</h4>
+                                        <span class="extra-price-tag">$40.00</span>
+                                        <button class="add-extra-btn" data-name="Papas a la Francesa" data-price="40">Agregar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -572,94 +463,91 @@ max-width: 200px; /* Reduce el tamaño máximo en pantallas pequeñas */
                 </div>
 
                 <div class="cart-container">
-                    <h3>TU PEDIDO</h3>
-                    <ul id="cart-items-container"><p class="empty-cart-message">Tu pedido está vacío.</p></ul>
+                    <h3>🛒 Tu Canasta</h3>
+                    <ul id="cart-items-container"><p class="empty-cart-message">Aún no has agregado nada...</p></ul>
                     <div class="cart-total">
-                        <p style="margin:0; font-weight:700;">TOTAL:</p>
+                        <p style="margin:0; font-weight:700; color:#888; font-size:1.1rem;">TOTAL A PAGAR:</p>
                         <p id="cart-total-price">$0.00</p>
                     </div>
-                    <a id="whatsapp-order-btn" href="#" target="_blank">Enviar Pedido por WhatsApp</a>
+                    <a id="whatsapp-order-btn" href="#" target="_blank"><i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> Enviar Pedido</a>
+                    <p style="text-align:center; margin-top:15px; font-size:0.9rem; color:#aaa;">Pagas al recoger o por transferencia.</p>
                 </div>
             </div>
         </div>
     </section>
     
-    <section id="info">
-        <div class="container">
-            <h2>Todo lo que Debes Saber sobre <span class="highlight">Astro Bite</span></h2>
+    <section id="info-section" style="padding-top:0;">
+        <div class="container" id="info">
+            <h2>📍 Dónde y Cuándo</h2>
             <div class="faq-container">
                 <details>
-                    <summary>📍 ¿Dónde los encuentro?</summary>
-                    <p>¡Estamos justo afuera del metro UAM Azcapotzalco! Búscanos frente al puesto de revistas. Es muy fácil llegar. <a href="https://maps.app.goo.gl/1SSN2uPjn6Br17x7A" target="_blank">Ver en Google Maps</a>.</p>
+                    <summary>🗺️ ¿Dónde estamos?</summary>
+                    <p>Afuerita del Metro UAM Azcapotzalco, frente al puesto de revistas. <a href="https://maps.app.goo.gl/1SSN2uPjn6Br17x7A" target="_blank">Ver mapa</a>.</p>
                 </details>
                 <details>
-                    <summary>🕒 ¿Qué días y a qué hora abren?</summary>
-                    <p>Estamos para ti de <strong>Viernes a Domingo</strong>, de <strong>4:00 PM a 9:00 PM</strong> (o hasta agotar existencias, ¡que no se te haga tarde!). Los demás días, Astro y nosotros descansamos.</p>
+                    <summary>🕒 Horario de Servicio</summary>
+                    <p>Te esperamos de <strong>Jueves, Sabado y Domingo</strong>, de <strong>4:00 PM a 9:00 PM</strong>. Siguenos en nuestras redes para anuncios de cambios en nuestros horarios. </p>
                 </details>
                 <details>
-                    <summary>💳 ¿Cómo puedo pagar?</summary>
-                    <p>Aceptamos <strong>efectivo, transferencias y todas las tarjetas de crédito/débito</strong>. Puedes pagar por adelantado vía transferencia al hacer tu pedido por WhatsApp para que sea más rápido.</p>
+                    <summary>💵 ¿Cómo pago?</summary>
+                    <p>Aceptamos Efectivo, Transferencia y Tarjetas (Crédito/Débito).</p>
                 </details>
-                 <details>
-                    <summary>⏱️ ¿Cuánto tardan y cómo pido?</summary>
-                    <p>Cada banderilla se prepara al momento para que esté súper crujiente y calientita. El tiempo de espera es de 5 a 7 minutos. Puedes usar esta página para armar tu pedido y mandarlo por WhatsApp para solo llegar a recoger. ¡Por ahora solo es pick-up!</p>
-                </details>
-                 <details>
-                    <summary>✨ ¿Hay promociones o descuentos?</summary>
-                    <p>Por ahora no manejamos combos fijos ni descuentos por volumen. ¡Pero síguenos en nuestras redes sociales para no perderte de futuras sorpresas y recompensas a nuestros clientes leales! <a href="https://www.instagram.com/astro_bite/" target="_blank">Instagram</a> y <a href="https://www.tiktok.com/@_astrobites" target="_blank">TikTok</a>.</p>
+                <details>
+                    <summary>⏱️ ¿Cuánto tarda?</summary>
+                    <p>Preparamos todo al momento para que esté súper crujiente. Tardamos entre 5 y 7 minutos por pedido.</p>
                 </details>
             </div>
         </div>
     </section>
 
-     <!-- SECCIÓN DE QUEJAS Y SUGERENCIAS -->
     <section id="quejas">
-    <div class="container">
-        <h2>📢 Quejas y Sugerencias</h2>
-        <p style="text-align:center; max-width:600px; margin:0 auto 30px;">Queremos mejorar siempre 🐾. Cuéntanos cualquier queja, sugerencia o experiencia que quieras compartir.</p>
-        
-        <form id="form-sugerencia" action="https://formsubmit.co/banderillas.astro.bite@gmail.com" method="POST">
-            
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://banderillas-astrobite.github.io/astro-bite-1/"> <textarea name="message" id="mensajeSugerencia" rows="5" placeholder="Escribe tu mensaje aquí..." required style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc;"></textarea>
-            
-            <button id="sugerencia-btn" type="submit" style="margin-top:15px; background:var(--color-rojo); color:white; font-weight:700; padding:12px 20px; border:none; border-radius:8px; cursor:pointer; width:100%;">Enviar Comentario</button>
-        </form>
-    </div>
-</section>
+        <div class="container" style="text-align:center;">
+            <h2>💬 Buzón de Astro</h2>
+            <p style="margin-bottom:25px; font-size:1.1rem;">¿Te encantó o podemos mejorar? ¡Queremos leerte!</p>
+            <form id="form-sugerencia" action="https://formsubmit.co/banderillas.astro.bite@gmail.com" method="POST" style="max-width:550px; margin:0 auto;">
+                <input type="hidden" name="_captcha" value="false">
+                <textarea name="message" id="mensajeSugerencia" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                <button id="sugerencia-btn" type="submit" style="margin-top:20px; background:var(--color-amarillo); color:var(--color-texto); padding:15px 30px; border-radius:50px; font-weight:800; font-size:1.1rem; transition:0.3s; box-shadow:var(--sombra-suave);">Enviar Comentario 🐾</button>
+            </form>
+        </div>
+    </section>
 
 </main>
 
 <footer>
-    <p>© 2025 Astro Bite - Hecho con 🐾 y cariño.</p>
-    <p>
-        <a href="https://www.instagram.com/astro_bite/" target="_blank"><i class="fab fa-instagram"></i></a> | 
+    <img src="logo.png" alt="Astro Bite Logo" style="width:80px; opacity:0.5; margin-bottom:20px; filter: grayscale(1) brightness(2);">
+    <p>© 2025 Astro Bite | Hecho con mucho cariño 🐶</p>
+    <div style="margin-top:20px;">
+        <a href="https://www.instagram.com/astro_bite/" target="_blank"><i class="fab fa-instagram"></i></a>
         <a href="https://www.tiktok.com/@_astrobites" target="_blank"><i class="fab fa-tiktok"></i></a>
-    </p>
+    </div>
 </footer>
 
-
+<div class="popup-overlay" id="popup-sugerencia">
+    <div class="popup-content">
+        <h3>¡Gracias! 🐾</h3>
+        <p>Astro ha recibido tu mensaje y mueve la colita de felicidad.</p>
+        <button class="popup-close-btn">¡De nada!</button>
+    </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    const MODO_PRUEBA = false; // <-- AÑADE ESTA LÍNEA AQUÍ
+    const MODO_PRUEBA = false; 
 
-    // =================================================
-    // 1. DECLARACIÓN DE VARIABLES Y CONSTANTES
-    // =================================================
+    // VARS
     const prices = {
         relleno: { Salchicha: 45, Combinada: 50, Queso: 55 },
-        cubiertaPapa: 5,
-        cubiertaPremium: 10,
-        papasConBanderilla: 15,
+        cubiertaPapa: 5, cubiertaPremium: 10, papasConBanderilla: 15,
+        salchipulposSolo: 35, salchipulposConPapas: 50 
     };
-    const papaCubieta = ["Papa"]
+    const papaCubieta = ["Papa"];
     const premiumCubiertas = ["Cheetos", "Flamin' Hot"];
     let pedido = [];
     let currentTooltip = null;
 
-    // --- Selectores de Elementos del DOM ---
+    // SELECTORES
     const rellenoGroup = document.getElementById('relleno-group');
     const cubiertaGroup = document.getElementById('cubierta-group');
     const papasBanderillaGroup = document.getElementById('papas-banderilla-group');
@@ -668,68 +556,78 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartItemsContainer = document.getElementById('cart-items-container');
     const cartTotalPrice = document.getElementById('cart-total-price');
     const whatsappBtn = document.getElementById('whatsapp-order-btn');
-    const extrasContainer = document.querySelector('.extras-grid');
-    const carouselTrack = document.querySelector('.carousel-track');
-    const carouselImages = carouselTrack ? carouselTrack.querySelectorAll('img') : [];
-    const formSugerencia = document.getElementById('form-sugerencia'); // <-- Ahora se declara aquí, seguro
+    const extrasSectionContainer = document.querySelector('.extras-grid');
+    const formSugerencia = document.getElementById('form-sugerencia'); 
 
-    // =================================================
-    // 2. DEFINICIÓN DE FUNCIONES
-    // =================================================
-
+    // LOGICA PRECIOS
     function actualizarPrecioPreview() {
         const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
         const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
         const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
         if (!selectedRelleno || !selectedCubierta) return 0;
+        
         let precioActual = prices.relleno[selectedRelleno.value];
-        if (premiumCubiertas.includes(selectedCubierta.value)) {
-            precioActual += prices.cubiertaPremium;
-        }
-        if (papaCubieta.includes(selectedCubierta.value)) {
-            precioActual += prices.cubiertaPapa;
-        }
-        if (selectedPapas && selectedPapas.value === 'si') {
-            precioActual += prices.papasConBanderilla;
-        }
+        if (premiumCubiertas.includes(selectedCubierta.value)) precioActual += prices.cubiertaPremium;
+        if (papaCubieta.includes(selectedCubierta.value)) precioActual += prices.cubiertaPapa;
+        if (selectedPapas && selectedPapas.value === 'si') precioActual += prices.papasConBanderilla;
+        
         banderillaPricePreview.textContent = `$${precioActual.toFixed(2)}`;
         return precioActual;
     }
 
+    // AGREGAR BANDERILLA
     function agregarBanderilla() {
         if (addBanderillaBtn.classList.contains('confirmed')) return;
         const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
         const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
         const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
         const precioFinalBanderilla = actualizarPrecioPreview();
-        let nombreBanderilla = `Banderilla ${selectedRelleno.value} (${selectedCubierta.value})`;
-        if (selectedPapas && selectedPapas.value === 'si') {
-            nombreBanderilla += ' c/Papas';
-        }
+        
+        let nombreBanderilla = `Band. ${selectedRelleno.value} (${selectedCubierta.value})`;
+        if (selectedPapas && selectedPapas.value === 'si') nombreBanderilla += ' + Papas';
+        
         const nuevaBanderilla = { id: Date.now(), nombre: nombreBanderilla, precio: precioFinalBanderilla };
         pedido.push(nuevaBanderilla);
         renderizarPedido();
-        addBanderillaBtn.classList.add('confirmed');
-        addBanderillaBtn.disabled = true;
-        setTimeout(() => {
-            addBanderillaBtn.classList.remove('confirmed');
-            addBanderillaBtn.disabled = false;
-        }, 1500);
+        animarBoton(addBanderillaBtn);
     }
 
-    function agregarExtra(nombre, precio, botonPresionado) {
+    // EXTRAS
+    function agregarExtraSimple(nombre, precio, botonPresionado) {
         if (botonPresionado.classList.contains('confirmed')) return;
         const nuevoExtra = { id: Date.now(), nombre: nombre, precio: parseFloat(precio) };
         pedido.push(nuevoExtra);
         renderizarPedido();
-        botonPresionado.classList.add('confirmed');
-        botonPresionado.disabled = true;
-        setTimeout(() => {
-            botonPresionado.classList.remove('confirmed');
-            botonPresionado.disabled = false;
-        }, 1500);
+        animarBoton(botonPresionado);
     }
 
+    function agregarSalchipulpos(botonPresionado) {
+         if (botonPresionado.classList.contains('confirmed')) return;
+         const container = botonPresionado.closest('.special-extra-container');
+         const tipoSeleccionado = container.querySelector('input[name="salchi-type"]:checked').value;
+         
+         let nombreFinal = "Salchipulpos";
+         let precioFinal = 0;
+         if(tipoSeleccionado === 'solo') {
+             nombreFinal += " (Solos)";
+             precioFinal = prices.salchipulposSolo;
+         } else {
+             nombreFinal += " con Papas";
+             precioFinal = prices.salchipulposConPapas;
+         }
+         const nuevoExtra = { id: Date.now(), nombre: nombreFinal, precio: precioFinal };
+         pedido.push(nuevoExtra);
+         renderizarPedido();
+         animarBoton(botonPresionado);
+    }
+
+    function animarBoton(boton) {
+        boton.classList.add('confirmed');
+        boton.disabled = true;
+        setTimeout(() => { boton.classList.remove('confirmed'); boton.disabled = false; }, 1500);
+    }
+
+    // CARRITO
     function eliminarDelPedido(itemId) {
         pedido = pedido.filter(item => item.id !== parseInt(itemId));
         renderizarPedido();
@@ -737,147 +635,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderizarPedido() {
         cartItemsContainer.innerHTML = '';
-
         if (pedido.length === 0) {
-            cartItemsContainer.innerHTML = '<p class="empty-cart-message">Tu pedido está vacío.</p>';
+            cartItemsContainer.innerHTML = '<p class="empty-cart-message">Aún no has agregado nada...</p>';
         } else {
             pedido.forEach(item => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span class="item-name">${item.nombre}</span><span class="item-price">$${item.precio.toFixed(2)}</span><button class="remove-item-btn" data-id="${item.id}">X</button>`;
+                li.innerHTML = `<span class="item-name">${item.nombre}</span><span class="item-price">$${item.precio.toFixed(2)}</span><button class="remove-item-btn" data-id="${item.id}" title="Eliminar"><i class="fas fa-times"></i></button>`;
                 cartItemsContainer.appendChild(li);
             });
         }
-        
         const total = pedido.reduce((sum, item) => sum + item.precio, 0);
         cartTotalPrice.textContent = `$${total.toFixed(2)}`;
-        
-        // Actualizamos el link y llamamos a la nueva función "jefe" del botón
         actualizarLinkWhatsApp();
         actualizarEstadoWhatsappBtn(); 
     }
 
     function actualizarLinkWhatsApp() {
-        if (pedido.length === 0) {
-            whatsappBtn.href = '#';
-            return;
-        }
-        let orderText = '¡Hola Astro Bite! 🐶 Quisiera ordenar lo siguiente:\n\n';
-        pedido.forEach(item => {
-            orderText += `- ${item.nombre}: $${item.precio.toFixed(2)}\n`;
-        });
+        if (pedido.length === 0) { whatsappBtn.href = '#'; return; }
+        let orderText = '¡Hola Astro Bite! 🐶 Quisiera hacer este pedido:\n\n';
+        pedido.forEach(item => { orderText += `- ${item.nombre}: $${item.precio.toFixed(2)}\n`; });
         const total = pedido.reduce((sum, item) => sum + item.precio, 0);
-        orderText += `\n*TOTAL: $${total.toFixed(2)}*\n\n¿Me confirman por favor?`;
-        const whatsappURL = `https://api.whatsapp.com/send?phone=5615635393&text=${encodeURIComponent(orderText)}`;
-        whatsappBtn.href = whatsappURL;
+        orderText += `\n*TOTAL A PAGAR: $${total.toFixed(2)}*\n\n¿Me confirman por favor?`;
+        whatsappBtn.href = `https://api.whatsapp.com/send?phone=5615635393&text=${encodeURIComponent(orderText)}`;
     }
 
     function actualizarEstadoWhatsappBtn() {
         const tiendaAbierta = verificarHorario();
-        const agotado = false; // El mismo valor que usas en mostrarAviso
-
+        const agotado = false; 
         if (!tiendaAbierta) {
-            whatsappBtn.classList.add('disabled');
-            whatsappBtn.textContent = 'Tienda Cerrada';
-            return; // Detenemos la función aquí, esta condición tiene la máxima prioridad.
+            whatsappBtn.classList.add('disabled'); whatsappBtn.innerHTML = '<i class="fas fa-store-slash"></i> Tienda Cerrada'; return; 
         }
-
         if (agotado) {
-            whatsappBtn.classList.add('disabled');
-            whatsappBtn.textContent = 'Producto Agotado';
-            return; // Segunda prioridad.
+            whatsappBtn.classList.add('disabled'); whatsappBtn.textContent = 'Producto Agotado'; return; 
         }
-
         if (pedido.length === 0) {
-            whatsappBtn.classList.add('disabled');
-            whatsappBtn.textContent = 'Enviar Pedido por WhatsApp'; // Texto original
+            whatsappBtn.classList.add('disabled'); whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Pedido'; 
         } else {
-            whatsappBtn.classList.remove('disabled');
-            whatsappBtn.textContent = 'Enviar Pedido por WhatsApp'; // Texto original
+            whatsappBtn.classList.remove('disabled'); whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Pedido'; 
         }
     }
 
     function verificarHorario() {
-        // Si el MODO_PRUEBA está activado, siempre decimos que la tienda está abierta.
-        if (MODO_PRUEBA) {
-            return true;
-        }
-
-        // Si no, la función continúa con su lógica normal de horario.
+        if (MODO_PRUEBA) return true;
         const ahora = new Date();
         const dia = ahora.getDay();
         const hora = ahora.getHours();
-        return ([5, 6, 0].includes(dia)) && (hora >= 16 && hora < 21);
+        return ([4, 6, 0].includes(dia)) && (hora >= 16 && hora < 21);
     }
 
     function mostrarAviso() {
-        const avisoHorario = document.createElement('div');
-        avisoHorario.style.cssText = `position: sticky; top: 0; width: 100%; z-index: 1000; background: #ffc107; color: #212529; padding: 15px; text-align: center; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.2);`;
-        document.body.prepend(avisoHorario);
-        
+        const avisoExistente = document.getElementById('aviso-horario');
+        if(avisoExistente) avisoExistente.remove();
         const tiendaAbierta = verificarHorario();
-        const agotado = false; // CAMBIA ESTO A true CUANDO YA NO HAYA PRODUCTO
+        const agotado = false; 
 
-        if (!tiendaAbierta) {
-            avisoHorario.textContent = "🚫 La tienda está cerrada. Horario: Viernes a Domingo de 4:00 PM a 9:00 PM.";
-            
-            // --- LÍNEA AÑADIDA ---
-            // Si la tienda está cerrada, deshabilitamos el botón de WhatsApp.
-            whatsappBtn.classList.add('disabled');
-            whatsappBtn.textContent = 'Tienda Cerrada'; // Cambiamos el texto para que sea claro
-
-        } else if (agotado) {
-            avisoHorario.textContent = "❌ Hoy ya se terminaron las banderillas. ¡Vuelve mañana!";
-            
-            // También deshabilitamos el botón si el producto está agotado
-            whatsappBtn.classList.add('disabled');
-            whatsappBtn.textContent = 'Producto Agotado';
-
-        } else {
-            // Si la tienda está abierta y hay producto, quitamos el aviso.
-            avisoHorario.remove();
-            // Y dejamos que la función renderizarPedido() controle el botón.
+        if (!tiendaAbierta || agotado) {
+             const avisoHorario = document.createElement('div');
+             avisoHorario.id = 'aviso-horario';
+             avisoHorario.style.cssText = `position: sticky; top: 0; width: 100%; z-index: 1000; background: var(--color-texto); color: var(--color-amarillo); padding: 15px; text-align: center; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 0.95rem;`;
+             document.body.prepend(avisoHorario);
+             if (!tiendaAbierta) {
+                avisoHorario.innerHTML = "😴 <strong>Astro está descansando.</strong> Horario: Jue,Sab,Dom de 4:00 PM a 9:00 PM.";
+             } else {
+                avisoHorario.innerHTML = "❌ <strong>¡Se acabó todo por hoy!</strong> Muchas gracias. Vuelve mañana.";
+             }
         }
+        actualizarEstadoWhatsappBtn();
     }
 
     function crearPopupSugerencia() {
-        if (document.getElementById('popup-sugerencia')) return;
-        const popupHTML = `<div class="popup-overlay" id="popup-sugerencia"><div class="popup-content"><h3>¡Gracias!</h3><p>🐾 Tus comentarios nos ayudan a mejorar siempre.</p><button class="popup-close-btn">Entendido</button></div></div>`;
-        document.body.insertAdjacentHTML('beforeend', popupHTML);
         const popup = document.getElementById('popup-sugerencia');
+        if (!popup) return;
         const cerrarPopup = () => popup.classList.remove('active');
         popup.querySelector('.popup-close-btn').addEventListener('click', cerrarPopup);
-        popup.addEventListener('click', (e) => {
-            if (e.target.id === 'popup-sugerencia') cerrarPopup();
-        });
+        popup.addEventListener('click', (e) => { if (e.target.id === 'popup-sugerencia') cerrarPopup(); });
     }
     
-    // =================================================
-    // 3. ASIGNACIÓN DE EVENTOS (EVENT LISTENERS)
-    // =================================================
-    
+    // LISTENERS
     rellenoGroup.addEventListener('change', actualizarPrecioPreview);
     cubiertaGroup.addEventListener('change', actualizarPrecioPreview);
     papasBanderillaGroup.addEventListener('change', actualizarPrecioPreview);
     addBanderillaBtn.addEventListener('click', agregarBanderilla);
     
-    extrasContainer.addEventListener('click', (e) => {
-        const botonPresionado = e.target.closest('.add-extra-btn');
-        if (botonPresionado) {
-            agregarExtra(botonPresionado.dataset.name, botonPresionado.dataset.price, botonPresionado);
-        }
+    extrasSectionContainer.addEventListener('click', (e) => {
+        const btnSimple = e.target.closest('.add-extra-btn');
+        if (btnSimple) { agregarExtraSimple(btnSimple.dataset.name, btnSimple.dataset.price, btnSimple); return; }
+        const btnEspecial = e.target.closest('.add-special-extra-btn');
+        if (btnEspecial) { agregarSalchipulpos(btnEspecial); return; }
     });
     
     cartItemsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-item-btn')) {
-            eliminarDelPedido(e.target.dataset.id);
-        }
+        const btnEliminar = e.target.closest('.remove-item-btn');
+        if (btnEliminar) eliminarDelPedido(btnEliminar.dataset.id);
     });
 
     whatsappBtn.addEventListener('click', (e) => {
-        if (pedido.length === 0) {
-            e.preventDefault();
-            alert("Tu pedido está vacío. ¡Agrega algo antes de enviar!");
-        }
+        if (pedido.length === 0) { e.preventDefault(); alert("¡Tu canasta está vacía! Agrega unas banderillas primero 🐾"); }
     });
 
     if (formSugerencia) {
@@ -885,65 +738,40 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             const botonSubmit = document.getElementById('sugerencia-btn');
             const formData = new FormData(this);
-            botonSubmit.disabled = true;
-            botonSubmit.textContent = 'Enviando...';
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                if (response.ok) {
-                    const popup = document.getElementById('popup-sugerencia');
-                    if (popup) popup.classList.add('active');
-                    formSugerencia.reset();
-                } else {
-                    alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error de red. Por favor, revisa tu conexión.');
-            }).finally(() => {
-                botonSubmit.disabled = false;
-                botonSubmit.textContent = 'Enviar Comentario';
-            });
+            botonSubmit.disabled = true; botonSubmit.textContent = 'Enviando...';
+            fetch(this.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
+            .then(response => {
+                if (response.ok) { document.getElementById('popup-sugerencia')?.classList.add('active'); formSugerencia.reset(); }
+                else { alert('Hubo un problema. Intenta de nuevo.'); }
+            }).catch(error => { alert('Error de conexión.'); })
+            .finally(() => { botonSubmit.disabled = false; botonSubmit.textContent = 'Enviar Comentario 🐾'; });
         });
     }
     
+    const carouselImages = document.querySelectorAll('.carousel img');
     if(carouselImages.length > 0) {
         carouselImages.forEach(img => {
             img.addEventListener('click', () => {
                 if (currentTooltip) currentTooltip.remove();
                 const tooltip = document.createElement('div');
-                tooltip.className = 'tooltip';
-                tooltip.textContent = img.dataset.desc;
+                tooltip.className = 'tooltip'; tooltip.textContent = img.dataset.desc;
                 document.body.appendChild(tooltip);
                 const rect = img.getBoundingClientRect();
                 tooltip.style.left = `${rect.left + window.scrollX}px`;
-                tooltip.style.top = `${rect.bottom + window.scrollY + 8}px`;
+                tooltip.style.top = `${rect.bottom + window.scrollY + 10}px`;
                 currentTooltip = tooltip;
+                setTimeout(() => { if(currentTooltip) currentTooltip.remove(); }, 3000);
             });
-        });
-        document.addEventListener('click', (e) => {
-            if (currentTooltip && !e.target.closest('.tooltip') && !e.target.closest('.carousel img')) {
-                currentTooltip.remove();
-                currentTooltip = null;
-            }
         });
     }
 
-    // =================================================
-    // 4. CÓDIGO DE INICIALIZACIÓN (SE EJECUTA AL FINAL)
-    // =================================================
-    
+    // INIT
     actualizarPrecioPreview();
     renderizarPedido();
     crearPopupSugerencia();
     mostrarAviso();
-
 });
 </script>
 
-
 </body>
-
 </html>
