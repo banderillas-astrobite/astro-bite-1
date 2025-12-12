@@ -49,7 +49,6 @@
         h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 900; letter-spacing: -0.5px; margin: 0; color: var(--color-texto); }
         h1 { color: var(--color-rojo); }
         
-        /* CORRECCIÓN DE TÍTULOS: Centrado robusto sin 'transform' */
         .title-container {
             text-align: center;
             margin-bottom: 40px;
@@ -65,18 +64,9 @@
             z-index: 1;
         }
         
-        /* Subrayado amarillo */
         h2::after {
-            content: ''; 
-            position: absolute; 
-            bottom: -5px; 
-            left: 10%; 
-            width: 80%; 
-            height: 8px;
-            background: var(--color-amarillo); 
-            border-radius: 10px; 
-            opacity: 0.6;
-            z-index: -1;
+            content: ''; position: absolute; bottom: -5px; left: 10%; width: 80%; height: 8px;
+            background: var(--color-amarillo); border-radius: 10px; opacity: 0.6; z-index: -1;
         }
 
         .highlight { color: var(--color-rojo); }
@@ -86,7 +76,7 @@
         /* --- HERO SECTION --- */
         #hero {
             position: relative;
-            min-height: 45vh; /* Un poco menos alto en móvil */
+            min-height: 45vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -119,7 +109,7 @@
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-190px * 5)); } }
 
         /* ======================================================= */
-        /* ✅ GALERÍA ARREGLADA (Fotos Responsive) ✅ */
+        /* ✅ GALERÍA CORREGIDA (FIX IMÁGENES) ✅ */
         /* ======================================================= */
         #galeria-real { 
             padding: 20px 0 40px 0; 
@@ -128,24 +118,24 @@
 
         .stream-container {
             display: flex;
-            gap: 20px; /* Menos espacio entre fotos */
+            gap: 20px;
             overflow-x: auto; 
-            padding: 30px 20px 50px 20px; /* Padding ajustado para evitar cortes */
+            padding: 30px 20px 50px 20px;
             scroll-snap-type: x mandatory; 
             scrollbar-width: none; 
             -ms-overflow-style: none;
             cursor: grab;
-            align-items: center; /* Centrar verticalmente */
+            align-items: center;
         }
         .stream-container::-webkit-scrollbar { display: none; }
 
         .stream-item {
             position: relative;
-            /* TAMAÑO MÓVIL OPTIMIZADO: */
-            min-width: 70vw; /* Ocupa el 70% del ancho del celular (se ve la siguiente foto) */
-            height: 280px;   /* Altura controlada para no pixelarse */
+            /* Hacemos el contenedor un poco más alto para fotos verticales */
+            min-width: 70vw; 
+            height: 320px;   
             background: white;
-            padding: 8px 8px 35px 8px;
+            padding: 10px 10px 40px 10px; /* Marco blanco */
             border-radius: 4px;
             box-shadow: var(--sombra-suave);
             flex-shrink: 0; 
@@ -154,7 +144,6 @@
             transform-origin: center center;
         }
 
-        /* En pantallas más grandes (PC), usamos tamaños fijos */
         @media (min-width: 768px) {
             .stream-item {
                 min-width: 280px;
@@ -162,18 +151,19 @@
             }
         }
 
+        /* --- LA CORRECCIÓN CLAVE --- */
         .stream-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Recorta inteligentemente para llenar el cuadro */
+            /* contain: Muestra la foto entera sin cortarla, ajustándose al espacio disponible */
+            object-fit: contain; 
             border-radius: 2px;
+            background-color: #f0f0f0; /* Fondo gris sutil por si la foto no llena el cuadro */
         }
 
-        /* Rotaciones suaves */
         .stream-item:nth-child(odd) { transform: rotate(-2deg); }
         .stream-item:nth-child(even) { transform: rotate(2deg); }
 
-        /* Efecto Hover */
         .stream-item:hover {
             transform: scale(1.05) rotate(0deg) !important;
             z-index: 100;
@@ -301,9 +291,9 @@
 
         .tooltip { position: absolute; background: var(--color-rojo); color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; z-index: 1000; pointer-events: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: 600; }
         
-        /* ✅ CORRECCIÓN BUZÓN: Centrado perfecto */
+        /* ✅ CORRECCIÓN BUZÓN: Centrado */
         #quejas .container {
-            text-align: center; /* Centra el texto y elementos inline */
+            text-align: center;
             max-width: 600px;
         }
         #form-sugerencia {
@@ -528,7 +518,7 @@
                 </details>
                 <details>
                     <summary>🕒 Horario de Servicio</summary>
-                    <p>Te esperamos de <strong>Viernes a Domingo</strong>, de <strong>4:00 PM a 9:00 PM</strong>.</p>
+                    <p>Te esperamos <strong>Jueves, Sábado y Domingo</strong>, de <strong>4:00 PM a 9:00 PM</strong>.</p>
                 </details>
                 <details>
                     <summary>💵 ¿Cómo pago?</summary>
@@ -724,7 +714,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const ahora = new Date();
         const dia = ahora.getDay();
         const hora = ahora.getHours();
-        return ([5, 6, 0].includes(dia)) && (hora >= 16 && hora < 21);
+        // Jueves (4), Sábado (6), Domingo (0)
+        return ([4, 6, 0].includes(dia)) && (hora >= 16 && hora < 21);
     }
 
     function mostrarAviso() {
@@ -739,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
              avisoHorario.style.cssText = `position: sticky; top: 0; width: 100%; z-index: 1000; background: var(--color-texto); color: var(--color-amarillo); padding: 15px; text-align: center; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 0.95rem;`;
              document.body.prepend(avisoHorario);
              if (!tiendaAbierta) {
-                avisoHorario.innerHTML = "😴 <strong>Astro está descansando.</strong> Horario: Vie-Dom de 4:00 PM a 9:00 PM.";
+                avisoHorario.innerHTML = "😴 <strong>Astro está descansando.</strong> Horario: Jueves, Sábado y Domingo de 4:00 PM a 9:00 PM.";
              } else {
                 avisoHorario.innerHTML = "❌ <strong>¡Se acabó todo por hoy!</strong> Muchas gracias. Vuelve mañana.";
              }
