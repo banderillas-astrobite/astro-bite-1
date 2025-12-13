@@ -25,13 +25,10 @@
             --color-fondo: #FFF8E7;
             --color-texto: #2F3542; 
             --color-superficie: #FFFFFF;
-            --borde-redondo: 24px;
-            --sombra-suave: 0 10px 30px rgba(0,0,0,0.08);
-            --sombra-hover: 0 25px 50px rgba(255, 71, 87, 0.3);
-            --fuente-principal: 'Poppins', sans-serif;
-            --fuente-titulos: 'Poppins', sans-serif;
             --transicion-suave: all 0.3s ease;
             --transicion-rebote: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --fuente-principal: 'Poppins', sans-serif;
+            --fuente-titulos: 'Poppins', sans-serif;
         }
 
         * { box-sizing: border-box; }
@@ -47,7 +44,7 @@
             position: relative;
         }
 
-        /* --- FONDO ANIMADO DE PARTÍCULAS --- */
+        /* --- FONDO ANIMADO --- */
         .background-particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1; overflow: hidden;
@@ -55,10 +52,7 @@
             background-size: 30px 30px; opacity: 0.5;
         }
         .particle {
-            position: absolute;
-            opacity: 0.15;
-            animation: floatUp linear infinite;
-            color: var(--color-rojo);
+            position: absolute; opacity: 0.15; animation: floatUp linear infinite; color: var(--color-rojo);
         }
         .particle:nth-child(even) { color: var(--color-amarillo); }
         @keyframes floatUp {
@@ -71,25 +65,19 @@
         h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 900; letter-spacing: -0.5px; margin: 0; color: var(--color-texto); }
         h1 { color: var(--color-rojo); }
         
-        .title-container {
-            text-align: center; margin-bottom: 35px; width: 100%; display: flex; justify-content: center;
-        }
-        h2 { 
-            font-size: clamp(2rem, 5vw, 2.8rem); position: relative; display: inline-block; z-index: 1;
-        }
+        .title-container { text-align: center; margin-bottom: 35px; width: 100%; display: flex; justify-content: center; }
+        h2 { font-size: clamp(2rem, 5vw, 2.8rem); position: relative; display: inline-block; z-index: 1; }
         h2::after {
             content: ''; position: absolute; bottom: -5px; left: 5%; width: 90%; height: 8px;
             background: var(--color-amarillo); border-radius: 10px; opacity: 0.6; z-index: -1;
             transition: var(--transicion-rebote);
         }
         .title-container:hover h2::after { width: 100%; left: 0; height: 12px; }
-
         .highlight { color: var(--color-rojo); position: relative; display: inline-block; }
-        
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         section { padding: 50px 0; position: relative; }
 
-        /* --- HERO (ANIMADO) --- */
+        /* --- HERO --- */
         #hero {
             position: relative; min-height: 45vh; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center; padding-top: 40px;
@@ -113,7 +101,7 @@
         #hero p.tagline { font-size: 1.1rem; font-weight: 600; color: var(--color-amarillo); animation: fadeInUp 0.8s ease-out 0.5s backwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MENÚ CARRUSEL (CON EFECTO PULSO) --- */
+        /* --- MENÚ CARRUSEL --- */
         .menu-carousel-section { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); padding: 30px 0; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 2px solid white; border-bottom: 2px solid white; }
         .carousel { overflow: hidden; width: 100%; position: relative; padding: 10px 0; }
         .carousel-track { display: flex; width: calc(180px * 10); animation: scroll 30s linear infinite; }
@@ -124,9 +112,7 @@
         .carousel img:hover { transform: scale(1.15) rotate(-3deg) translateY(-10px); box-shadow: var(--sombra-hover); z-index: 10; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-180px * 5)); } }
 
-        /* ======================================================= */
-        /* ✅ GALERÍA "SHINY PREMIUM" (POLAROID) ✅ */
-        /* ======================================================= */
+        /* --- GALERÍA POLAROID --- */
         #galeria-real { padding: 20px 0 50px 0; overflow: visible; }
         .stream-container {
             display: flex; gap: 20px; overflow-x: auto; padding: 30px 20px 60px 20px;
@@ -155,36 +141,23 @@
             transition: transform 0.5s ease;
         }
 
-        /* --- MARCA DE AGUA (Corregida para stream-item) --- */
+        /* --- MARCA DE AGUA --- */
         .stream-item::before {
-            content: "";
-            position: absolute;
-            top: 10px; left: 10px; /* Ajustado al padding de la polaroid */
-            width: calc(100% - 20px); height: calc(100% - 50px); /* Ajustado a la imagen */
-            
-            /* AQUÍ VA TU LOGO */
-            background-image: url('logo.png');
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: 50%; /* Tamaño del logo */
-            opacity: 0.3; /* Transparencia */
-            
-            z-index: 5; /* Encima de la foto, debajo del brillo */
-            pointer-events: none;
+            content: ""; position: absolute; top: 10px; left: 10px;
+            width: calc(100% - 20px); height: calc(100% - 50px);
+            background-image: url('logo.png'); background-position: center;
+            background-repeat: no-repeat; background-size: 50%; opacity: 0.3;
+            z-index: 5; pointer-events: none;
         }
 
-        /* --- EFECTO SHINE (BRILLO) --- */
+        /* --- EFECTO SHINE --- */
         .stream-item::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.6) 50%, transparent);
             transform: skewX(-25deg); transition: 0.7s; pointer-events: none; z-index: 6;
         }
         .stream-item:hover::after { left: 150%; }
-        
-        .stream-item:hover {
-            transform: scale(1.08) rotate(0deg) translateY(-15px) !important;
-            box-shadow: 0 30px 60px rgba(255, 71, 87, 0.3); z-index: 20;
-        }
+        .stream-item:hover { transform: scale(1.08) rotate(0deg) translateY(-15px) !important; box-shadow: 0 30px 60px rgba(255, 71, 87, 0.3); z-index: 20; }
         .stream-item:hover img { transform: scale(1.05); }
 
         .polaroid-caption {
@@ -195,7 +168,7 @@
         .scroll-hint { text-align: center; color: var(--color-amarillo); font-weight: 700; font-size: 0.9rem; animation: pulse 1.5s infinite alternate; margin-bottom: -5px; display: block; letter-spacing: 1px; }
         @keyframes pulse { from { opacity: 0.6; transform: scale(0.95); } to { opacity: 1; transform: scale(1.05); } }
 
-        /* --- UI DEL PEDIDO (CON EFECTOS "JELLY") --- */
+        /* --- UI DEL PEDIDO --- */
         .order-layout { display: grid; gap: 30px; }
         @media (min-width: 900px) { .order-layout { grid-template-columns: 1.6fr 1fr; align-items: start; } }
 
@@ -210,7 +183,7 @@
         .step h3 { font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: var(--color-rojo); }
         .step-number { background: linear-gradient(135deg, var(--color-amarillo), #FFC312); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1rem; font-weight: 900; box-shadow: 0 5px 15px rgba(255, 165, 2, 0.4); }
 
-        /* --- BOTONES TIPO "JELLY" (GELATINA) --- */
+        /* --- BOTONES DE SELECCIÓN --- */
         .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; }
         .options-grid input[type="radio"] { display: none; }
         .options-grid label {
@@ -221,32 +194,21 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; overflow: hidden;
         }
         .options-grid label i { font-size: 1.6rem; margin-bottom: 8px; color: #ddd; transition: inherit; }
-        
         .options-grid label:hover { transform: translateY(-3px) scale(1.03); background: #fff8f9; border-color: #ffccd5; }
-
-        /* Animación Jelly al seleccionar */
         .options-grid input[type="radio"]:checked + label {
             border-color: var(--color-rojo); background-color: #fff0f2; color: var(--color-rojo);
-            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.25);
-            animation: jellyPop 0.6s; 
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.25); animation: jellyPop 0.6s; 
         }
         .options-grid input[type="radio"]:checked + label i { color: var(--color-rojo); transform: scale(1.1); }
-
         @keyframes jellyPop {
-            0% { transform: scale(1, 1); }
-            30% { transform: scale(1.15, 0.85); }
-            40% { transform: scale(0.9, 1.1); }
-            50% { transform: scale(1.05, 0.95); }
-            65% { transform: scale(0.98, 1.02); }
-            75% { transform: scale(1.02, 0.98); }
-            100% { transform: scale(1, 1); }
+            0% { transform: scale(1, 1); } 30% { transform: scale(1.15, 0.85); } 40% { transform: scale(0.9, 1.1); }
+            50% { transform: scale(1.05, 0.95); } 65% { transform: scale(0.98, 1.02); } 75% { transform: scale(1.02, 0.98); } 100% { transform: scale(1, 1); }
         }
 
-        /* Precio y Botón Principal */
+        /* --- PRECIOS Y BOTONES --- */
         .banderilla-preview {
             background: linear-gradient(to right, #fff0f2, white); padding: 25px; border-radius: 20px; margin-top: 30px;
-            display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--color-rojo);
-            border: 2px solid #ffdde1;
+            display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--color-rojo); border: 2px solid #ffdde1;
         }
         #banderilla-price-preview { font-size: 1.8rem; font-weight: 900; transition: transform 0.2s; }
         .price-bump { animation: priceBump 0.3s; }
@@ -261,7 +223,6 @@
         #add-banderilla-btn:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 15px 40px rgba(255, 71, 87, 0.5); }
         #add-banderilla-btn:active { transform: scale(0.95); }
         
-        /* Extras */
         .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
         .extra-item {
             background: white; border: 3px solid #f4f4f4; padding: 20px; border-radius: 22px; text-align: center;
@@ -276,7 +237,7 @@
         }
         .add-extra-btn:hover, .add-special-extra-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 20px rgba(255, 165, 2, 0.4); }
 
-        /* --- CARRITO VIBRANTE --- */
+        /* --- CARRITO --- */
         .cart-container { position: sticky; top: 20px; border: none; border-top: 6px solid var(--color-rojo); z-index: 100; }
         .cart-container.shake { animation: shakeCart 0.5s ease-in-out; }
         @keyframes shakeCart { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px) rotate(-2deg); } 75% { transform: translateX(5px) rotate(2deg); } }
@@ -284,8 +245,7 @@
         .cart-container h3 { text-align: center; font-size: 1.6rem; margin-bottom: 20px; color: var(--color-rojo); }
         #cart-items-container li {
             display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px;
-            padding: 15px 0; border-bottom: 2px dashed #eee; font-size: 0.95rem;
-            animation: slideInLeft 0.4s ease-out;
+            padding: 15px 0; border-bottom: 2px dashed #eee; font-size: 0.95rem; animation: slideInLeft 0.4s ease-out;
         }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
@@ -294,7 +254,6 @@
             display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: var(--transicion-rebote); cursor: pointer;
         }
         .remove-item-btn:hover { background: var(--color-rojo); color: white; transform: rotate(90deg) scale(1.1); }
-
         #cart-total-price { color: var(--color-rojo); font-size: 2rem; font-weight: 900; transition: 0.3s; }
 
         #whatsapp-order-btn {
@@ -304,8 +263,17 @@
             box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4); transition: var(--transicion-rebote);
         }
         #whatsapp-order-btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(37, 211, 102, 0.5); }
+        
+        /* ⚠️ CORRECCIÓN DE COLOR CUANDO ESTÁ DESACTIVADO ⚠️ */
+        #whatsapp-order-btn.disabled { 
+            background: #b2bec3 !important; 
+            box-shadow: none; 
+            pointer-events: none; 
+            cursor: not-allowed;
+            color: #eee;
+        }
 
-        /* --- DETAILS & FOOTER --- */
+        /* --- FOOTER & EXTRAS --- */
         details { background: white; margin-bottom: 15px; border-radius: 18px; padding: 18px 25px; transition: var(--transicion-rebote); border: 3px solid #f4f4f4; }
         details[open] { border-color: var(--color-amarillo); box-shadow: var(--sombra-suave); transform: scale(1.02); }
         summary { font-weight: 700; font-size: 1.05rem; cursor: pointer; }
@@ -327,9 +295,19 @@
         }
         #sugerencia-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 35px rgba(255, 165, 2, 0.5); }
 
-        /* ========================================= */
-        /* 🛡️ SISTEMA DE SEGURIDAD 🛡️ */
-        /* ========================================= */
+        /* ⚠️ CORRECCIÓN DE POPUP ⚠️ */
+        /* Ahora está oculto (display: none) por defecto */
+        .popup-overlay { 
+            display: none; 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; 
+        }
+        /* Solo se muestra cuando tiene la clase 'active' */
+        .popup-overlay.active { display: flex; }
+        
+        .popup-content { background: white; padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; }
+        .popup-close-btn { margin-top: 20px; padding: 10px 30px; background: var(--color-rojo); color: white; border-radius: 50px; font-weight: 700; cursor: pointer; border: none; }
+
+        /* SEGURIDAD DE IMÁGENES */
         img {
             -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -o-user-drag: none; user-drag: none;
             -webkit-user-select: none; user-select: none;
@@ -377,60 +355,19 @@
             <div class="title-container">
                 <h2>📸 Momentos <span class="highlight">Astro</span></h2>
             </div>
-            <p class="scroll-hint">✨ Desliza y toca para ver la magia ✨</p>
+            <p class="scroll-hint">✨ Las recomendaciones del Chef Astro 🐾✨</p>
             
             <div class="stream-container">
-                
-                <div class="stream-item">
-                    <img src="real_astro.jpg" alt="Foto astro">
-                    <div class="polaroid-caption">El es Astro🐶 (CEO de AstroBite) </div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="real_puesto.jpg" alt="Foto astro">
-                    <div class="polaroid-caption"> Aqui se hace toda la magia 🐶</div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="real_aceite_2.jpg" alt="Foto astro">
-                    <div class="polaroid-caption"> Deliciosas y calientitas 🐶</div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="real_varias.jpg" alt="Foto Cliente">
-                    <div class="polaroid-caption"> Para que no te quedes con el antojo</div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="real_cheetos.jpg" alt="Queso">
-                    <div class="polaroid-caption">Queso infinito 🧀</div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="real_ramen.jpg" alt="Cocina">
-                    <div class="polaroid-caption">Será la mas crujiente? 🍜</div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="flamin_real.jpg" alt="Flamin">
-                    <div class="polaroid-caption">¡Pica Rico! 🔥</div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="real_aceite.jpg" alt="Equipo">
-                    <div class="polaroid-caption">Hecho con Amor ❤️</div>
-                </div>
-
-                <div class="stream-item">
-                    <img src="real_fh_cruji_ep.jpg" alt="Ejemplo">
-                    <div class="polaroid-caption">Team cruji o picante? ✨</div>
-                </div>
-
-                 <div class="stream-item">
-                    <img src="real_favoritas.jpg" alt="Ejemplo">
-                    <div class="polaroid-caption">La Favorita de muchos </div>
-                </div>
-
+                <div class="stream-item"><img src="real_astro.jpg" alt="Foto astro"><div class="polaroid-caption">El es Astro🐶 (CEO de AstroBite) </div></div>
+                <div class="stream-item"><img src="real_puesto.jpg" alt="Foto astro"><div class="polaroid-caption"> Aqui se hace toda la magia 🐶</div></div>
+                <div class="stream-item"><img src="real_aceite_2.jpg" alt="Foto astro"><div class="polaroid-caption"> Deliciosas y calientitas 🐶</div></div>
+                <div class="stream-item"><img src="real_varias.jpg" alt="Foto Cliente"><div class="polaroid-caption"> 4 siempre es mejor que 1 🤤</div></div>
+                <div class="stream-item"><img src="real_cheetos.jpg" alt="Queso"><div class="polaroid-caption">Queso infinito 🧀</div></div>
+                <div class="stream-item"><img src="real_ramen.jpg" alt="Cocina"><div class="polaroid-caption">Será la mas crujiente? 🍜</div></div>
+                <div class="stream-item"><img src="flamin_real.jpg" alt="Flamin"><div class="polaroid-caption">¡Pica Rico! 🔥</div></div>
+                <div class="stream-item"><img src="real_aceite.jpg" alt="Equipo"><div class="polaroid-caption">Hecho con Amor ❤️</div></div>
+                <div class="stream-item"><img src="real_fh_cruji_ep.jpg" alt="Ejemplo"><div class="polaroid-caption">Team cruji o picante? ✨</div></div>
+                <div class="stream-item"><img src="real_favoritas.jpg" alt="Ejemplo"><div class="polaroid-caption">La Favorita de muchos </div></div>
             </div>
         </div>
     </section>
@@ -626,16 +563,17 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 15; i++) {
             const particle = document.createElement('i');
             particle.classList.add('fas', icons[Math.floor(Math.random() * icons.length)], 'particle');
+            particle.style.color = '#7D392E'; // Café oscuro
             particle.style.left = Math.random() * 100 + 'vw';
             particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
             particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-            particle.style.animationDelay = (Math.random() * 5) + 's';
+            particle.style.animationDelay = (Math.random() * 15) + 's';
             container.appendChild(particle);
         }
     }
     createParticles();
 
-    // --- EL PILÓN: FUNCIÓN DE CONFETI 🎉 ---
+    // --- FUNCIÓN DE CONFETI 🎉 ---
     function triggerConfetti() {
         if (typeof confetti === 'function') {
             confetti({
@@ -784,16 +722,30 @@ document.addEventListener('DOMContentLoaded', () => {
     function actualizarEstadoWhatsappBtn() {
         const tiendaAbierta = verificarHorario();
         const agotado = false; 
+        
+        // REINICIAMOS ESTADO PRIMERO
+        whatsappBtn.classList.remove('disabled');
+        whatsappBtn.style.pointerEvents = 'auto'; // Habilitar clics
+        whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Pedido'; 
+
         if (!tiendaAbierta) {
-            whatsappBtn.classList.add('disabled'); whatsappBtn.innerHTML = '<i class="fas fa-store-slash"></i> Tienda Cerrada'; return; 
+            whatsappBtn.classList.add('disabled'); 
+            whatsappBtn.removeAttribute('href'); // ⚠️ BORRA EL LINK PARA QUE NO FUNCIONE
+            whatsappBtn.style.pointerEvents = 'none'; // ⚠️ BLOQUEA EL CLIC POR CSS TAMBIÉN
+            whatsappBtn.innerHTML = '<i class="fas fa-store-slash"></i> Tienda Cerrada'; 
+            return; 
         }
         if (agotado) {
-            whatsappBtn.classList.add('disabled'); whatsappBtn.textContent = 'Producto Agotado'; return; 
+            whatsappBtn.classList.add('disabled'); 
+            whatsappBtn.removeAttribute('href');
+            whatsappBtn.style.pointerEvents = 'none';
+            whatsappBtn.textContent = 'Producto Agotado'; 
+            return; 
         }
         if (pedido.length === 0) {
-            whatsappBtn.classList.add('disabled'); whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Pedido'; 
-        } else {
-            whatsappBtn.classList.remove('disabled'); whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Pedido'; 
+            whatsappBtn.classList.add('disabled'); 
+            // Aquí NO quitamos el href pero visualmente parece deshabilitado
+            // para que el usuario sepa que tiene que agregar algo
         }
     }
 
@@ -852,7 +804,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     whatsappBtn.addEventListener('click', (e) => {
-        if (pedido.length === 0) { e.preventDefault(); alert("¡Tu canasta está vacía! Agrega unas banderillas primero 🐾"); }
+        // DOBLE SEGURIDAD: Si tiene la clase disabled, NO HACE NADA
+        if (whatsappBtn.classList.contains('disabled')) {
+            e.preventDefault();
+            return false;
+        }
+        if (pedido.length === 0) { 
+            e.preventDefault(); 
+            alert("¡Tu canasta está vacía! Agrega unas banderillas primero 🐾"); 
+        }
     });
 
     if (formSugerencia) {
