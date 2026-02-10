@@ -18,6 +18,50 @@
     <link rel="manifest" href="manifest.json">
 
     <style>
+
+        /* Contenedor principal */
+.floating-socials {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1500; /* Asegura que estén por encima de todo */
+}
+
+/* Estilo base del botón circular */
+.social-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.8rem;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Colores oficiales */
+.instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+
+.tiktok {
+    background: #000000;
+    border: 1px solid #ff0050; /* Opcional: detalle con el color secundario de TikTok */
+}
+
+/* Efecto al pasar el mouse */
+.social-btn:hover {
+    transform: scale(1.1) rotate(10deg);
+    filter: brightness(1.1);
+}
+
         /* --- PALETA & VARIABLES --- */
         :root {
             --color-rojo: #FF4757; 
@@ -508,11 +552,8 @@
 
 <footer>
     <img src="logo.png" alt="Astro Bite Logo" style="width:100px; opacity:0.7; margin-bottom:25px; filter: grayscale(0) brightness(1.2) drop-shadow(0 5px 15px rgba(255,165,2,0.4)); animation: floatDog 4s ease-in-out infinite;">
-    <p>© 2025 Astro Bite | Hecho con mucho cariño 🐶</p>
-    <div style="margin-top:25px;">
-        <a href="https://www.instagram.com/astro_bite/" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@_astrobites" target="_blank"><i class="fab fa-tiktok"></i></a>
-    </div>
+    <p>© 2026 Astro Bite | Hecho con mucho cariño 🐶</p>
+   
 </footer>
 
 <div class="popup-overlay" id="popup-sugerencia">
@@ -854,6 +895,15 @@ document.addEventListener('DOMContentLoaded', () => {
     mostrarAviso();
 });
 </script>
+
+<div class="floating-socials">
+    <a href="https://www.instagram.com/astro_bite/" target="_blank" class="social-btn instagram">
+        <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.tiktok.com/@_astrobites" target="_blank" class="social-btn tiktok">
+        <i class="fab fa-tiktok"></i>
+    </a>
+</div>
 
 </body>
 
