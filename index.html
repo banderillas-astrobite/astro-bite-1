@@ -363,6 +363,8 @@
             justify-content: center;
             flex-wrap: wrap;
             margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+
         }
         .tab-btn {
             padding: 10px 22px;
@@ -382,8 +384,11 @@
 
         .galeria-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            display: grid;
+            max-width: 1000px;
+            margin: auto;
         }
         .galeria-producto-card {
             background: white;
@@ -684,6 +689,21 @@
             text-align: center; margin-top: 15px; font-size: 0.8rem; color: #aaa; line-height: 1.5;
         }
         .pickup-note strong { color: #888; }
+
+        @media (max-width: 768px) {
+    .galeria-grid {
+        /* Fuerza exactamente 2 columnas del mismo tamaño */
+        grid-template-columns: repeat(2, 1fr); 
+        /* Opcional: Reducimos un poco el espacio para que las tarjetas no se vean tan apretadas */
+        gap: 10px; 
+    }
+    
+    /* Opcional: Reducir un poco el padding y textos en móvil para que encajen mejor a 2 columnas */
+    .galeria-card-info { padding: 10px; }
+    .galeria-card-info h4 { font-size: 0.9rem; }
+    .galeria-card-info p { font-size: 0.75rem; }
+}
+
     </style>
 </head>
 <body>
