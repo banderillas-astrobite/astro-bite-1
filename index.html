@@ -7,68 +7,27 @@
     
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Chewy&display=swap" rel="stylesheet">
-
     <meta name="theme-color" content="#E63946">
     <link rel="manifest" href="manifest.json">
 
     <style>
-
-        /* Contenedor principal */
-.floating-socials {
-    position: fixed;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 1500; /* Asegura que estén por encima de todo */
-}
-
-/* Estilo base del botón circular */
-.social-btn {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 1.8rem;
-    text-decoration: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Colores oficiales */
-.instagram {
-    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-}
-
-.tiktok {
-    background: #000000;
-    border: 1px solid #ff0050; /* Opcional: detalle con el color secundario de TikTok */
-}
-
-/* Efecto al pasar el mouse */
-.social-btn:hover {
-    transform: scale(1.1) rotate(10deg);
-    filter: brightness(1.1);
-}
-
-        /* --- PALETA & VARIABLES --- */
+        /* =============================================
+           VARIABLES & RESET
+        ============================================= */
         :root {
-            --color-rojo: #FF4757; 
-            --color-amarillo: #FFA502; 
+            --color-rojo: #FF4757;
+            --color-amarillo: #FFA502;
             --color-fondo: #FFF8E7;
-            --color-texto: #2F3542; 
+            --color-texto: #2F3542;
             --color-superficie: #FFFFFF;
+            --color-dulce: #a855f7;
+            --color-dulce-light: #f3e8ff;
+            --color-drink: #0ea5e9;
+            --color-drink-light: #e0f2fe;
             --transicion-suave: all 0.3s ease;
             --transicion-rebote: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             --fuente-principal: 'Poppins', sans-serif;
@@ -77,7 +36,7 @@
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        
+
         body {
             font-family: var(--fuente-principal);
             background-color: var(--color-fondo);
@@ -88,7 +47,185 @@
             position: relative;
         }
 
-        /* --- FONDO ANIMADO --- */
+        /* =============================================
+           POPUP NOVEDADES
+        ============================================= */
+        .novedades-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .novedades-overlay.active { display: flex; }
+
+        .novedades-popup {
+            background: white;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 520px;
+            overflow: hidden;
+            animation: popupEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .novedades-popup::-webkit-scrollbar { display: none; }
+
+        @keyframes popupEntrance {
+            from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+            to { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .novedades-header {
+            display: flex; flex-direction: column; align-items: center;
+            background: linear-gradient(135deg, var(--color-rojo), #ff2e44);
+            padding: 30px 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+        .novedades-header img.popup-logo {
+            width: 90px; height: auto; margin-bottom: 15px;
+
+            animation: floatDog 3s ease-in-out infinite;
+        }
+        .novedades-header h2 {
+            color: white;
+            font-size: 1.6rem;
+            margin: 0 0 5px;
+        }
+        .novedades-header p {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .novedad-badge {
+            display: inline-block;
+            background: var(--color-amarillo);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .novedades-body { padding: 25px; }
+
+        .novedad-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fff8e7;
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 2px solid #ffe5c0;
+            transition: transform 0.3s ease;
+        }
+        .novedad-card:hover { transform: translateX(5px); }
+
+        .novedad-card.dulce { background: var(--color-dulce-light); border-color: #d8b4fe; }
+        .novedad-card.bebida { background: var(--color-drink-light); border-color: #7dd3fc; }
+        .novedad-card.delivery { background: #f0fdf4; border-color: #f4b42c; }
+
+        .novedad-icon {
+            font-size: 2.5rem;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .novedad-info h4 { font-size: 1rem; color: var(--color-texto); margin: 0 0 3px; }
+        .novedad-info p { font-size: 0.82rem; color: #666; margin: 0; }
+
+        .novedad-card-img {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .novedades-close-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--color-rojo), #ff2e44);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: var(--transicion-rebote);
+            box-shadow: 0 8px 25px rgba(255,71,87,0.35);
+        }
+        .novedades-close-btn:hover { transform: scale(1.03); }
+
+        .novedades-btn-primary {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--color-rojo), #a02d39);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transicion-rebote);
+
+        }
+
+        .novedades-btn-primary:hover {transform: scale(1.2);}
+
+        /* =============================================
+           FLOATING SOCIALS
+        ============================================= */
+        .floating-socials {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1500;
+        }
+        .social-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.8rem;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+        .tiktok { background: #000000; border: 1px solid #ff0050; }
+        .didi { background: #ff9100; border: 1px solid #ff9100; }
+        .social-btn:hover { transform: scale(1.1) rotate(10deg); filter: brightness(1.1); }
+
+        /* =============================================
+           LAYOUT BASE
+        ============================================= */
         .background-particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1; overflow: hidden;
@@ -105,11 +242,11 @@
             100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
 
-        /* --- TIPOGRAFÍA --- */
         h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 900; letter-spacing: -0.5px; margin: 0; color: var(--color-texto); }
         h1 { color: var(--color-rojo); }
-        
-        .title-container { text-align: center; margin-bottom: 35px; width: 100%; display: flex; justify-content: center; }
+
+        .title-container { text-align: center; margin-bottom: 35px; width: 100%; display: flex; justify-content: center; flex-direction: column; align-items: center; }
+        .section-subtitle { font-size: 1rem; color: #888; margin-top: -20px; margin-bottom: 25px; font-weight: 600; }
         h2 { font-size: clamp(2rem, 5vw, 2.8rem); position: relative; display: inline-block; z-index: 1; }
         h2::after {
             content: ''; position: absolute; bottom: -5px; left: 5%; width: 90%; height: 8px;
@@ -118,10 +255,14 @@
         }
         .title-container:hover h2::after { width: 100%; left: 0; height: 12px; }
         .highlight { color: var(--color-rojo); position: relative; display: inline-block; }
+        .highlight-dulce { color: var(--color-dulce); }
+        .highlight-drink { color: var(--color-drink); }
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         section { padding: 50px 0; position: relative; }
 
-        /* --- HERO --- */
+        /* =============================================
+           HERO
+        ============================================= */
         #hero {
             position: relative; min-height: 45vh; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center; padding-top: 40px;
@@ -140,32 +281,35 @@
             50% { transform: translateY(-15px) rotate(3deg); filter: drop-shadow(0 30px 40px rgba(255,165,2,0.3)); }
         }
         .logo-image { width: 140px; height: auto; display: block; }
-        
+
         #hero h1 { font-size: clamp(2.5rem, 8vw, 3.8rem); line-height: 1.1; margin-bottom: 10px; animation: fadeInUp 0.8s ease-out 0.3s backwards; }
         #hero p.tagline { font-size: 1.1rem; font-weight: 600; color: var(--color-amarillo); animation: fadeInUp 0.8s ease-out 0.5s backwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MENÚ CARRUSEL --- */
-        .menu-carousel-section { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); padding: 30px 0; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 2px solid white; border-bottom: 2px solid white; }
+        /* =============================================
+           CARRUSEL
+        ============================================= */
+        .menu-carousel-section { background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 30px 0; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 2px solid white; border-bottom: 2px solid white; }
         .carousel { overflow: hidden; width: 100%; position: relative; padding: 10px 0; }
         .carousel-track { display: flex; width: calc(180px * 10); animation: scroll 30s linear infinite; }
         .carousel img {
             width: 150px; margin: 0 15px; border-radius: 25px;
             box-shadow: var(--sombra-suave); transition: var(--transicion-rebote); cursor: pointer; background: white; padding: 10px;
         }
-        .carousel img:hover { transform: scale(1.15) rotate(-3deg) translateY(-10px); box-shadow: var(--sombra-hover); z-index: 10; }
+        .carousel img:hover { transform: scale(1.15) rotate(-3deg) translateY(-10px); z-index: 10; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-180px * 5)); } }
 
-        /* --- GALERÍA POLAROID --- */
+        /* =============================================
+           GALERÍA POLAROID
+        ============================================= */
         #galeria-real { padding: 20px 0 50px 0; overflow: visible; }
         .stream-container {
             display: flex; gap: 20px; overflow-x: auto; padding: 30px 20px 60px 20px;
-            -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
             scrollbar-width: none; -ms-overflow-style: none; cursor: grab; align-items: center;
             perspective: 1000px;
         }
         .stream-container::-webkit-scrollbar { display: none; }
-
         .stream-item {
             position: relative; width: 260px; flex-shrink: 0;
             background: white; padding: 10px; padding-bottom: 40px;
@@ -173,19 +317,16 @@
             scroll-snap-align: center; transform-origin: center center;
             transition: var(--transicion-rebote); overflow: hidden;
         }
-        @media (min-width: 768px) { 
+        @media (min-width: 768px) {
             .stream-item { width: 300px; }
-            .stream-item:nth-child(odd) { transform: rotate(-1deg); } 
+            .stream-item:nth-child(odd) { transform: rotate(-1deg); }
             .stream-item:nth-child(even) { transform: rotate(1deg); }
         }
-
         .stream-item img {
             width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
             border-radius: 12px; background-color: #f8f8f8; display: block;
             transition: transform 0.5s ease;
         }
-
-        /* --- MARCA DE AGUA --- */
         .stream-item::before {
             content: ""; position: absolute; top: 10px; left: 10px;
             width: calc(100% - 20px); height: calc(100% - 50px);
@@ -193,17 +334,14 @@
             background-repeat: no-repeat; background-size: 50%; opacity: 0.3;
             z-index: 5; pointer-events: none;
         }
-
-        /* --- EFECTO SHINE --- */
         .stream-item::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.6) 50%, transparent);
             transform: skewX(-25deg); transition: 0.7s; pointer-events: none; z-index: 6;
         }
         .stream-item:hover::after { left: 150%; }
-        .stream-item:hover { transform: scale(1.08) rotate(0deg) translateY(-15px) !important; box-shadow: 0 30px 60px rgba(255, 71, 87, 0.3); z-index: 20; }
+        .stream-item:hover { transform: scale(1.08) rotate(0deg) translateY(-15px) !important; box-shadow: 0 30px 60px rgba(255,71,87,0.3); z-index: 20; }
         .stream-item:hover img { transform: scale(1.05); }
-
         .polaroid-caption {
             position: absolute; bottom: 8px; left: 0; width: 100%;
             text-align: center; font-family: 'Chewy', cursive; color: #FF4757; font-size: 1.2rem;
@@ -212,28 +350,134 @@
         .scroll-hint { text-align: center; color: var(--color-amarillo); font-weight: 700; font-size: 0.9rem; animation: pulse 1.5s infinite alternate; margin-bottom: -5px; display: block; letter-spacing: 1px; }
         @keyframes pulse { from { opacity: 0.6; transform: scale(0.95); } to { opacity: 1; transform: scale(1.05); } }
 
-        /* --- UI DEL PEDIDO --- */
+        /* =============================================
+           GALERÍA DE PRODUCTOS (nueva sección)
+        ============================================= */
+        #galeria-productos { padding: 40px 0 60px; }
+        .productos-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .tab-btn {
+            padding: 10px 22px;
+            border-radius: 50px;
+            border: 3px solid #eee;
+            background: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transicion-rebote);
+            color: #999;
+        }
+        .tab-btn:hover { border-color: var(--color-amarillo); color: var(--color-texto); transform: translateY(-2px); }
+        .tab-btn.active { background: var(--color-rojo); color: white; border-color: var(--color-rojo); box-shadow: 0 8px 20px rgba(255,71,87,0.35); }
+        .tab-btn.active-dulce { background: var(--color-dulce); color: white; border-color: var(--color-dulce); box-shadow: 0 8px 20px rgba(168,85,247,0.35); }
+        .tab-btn.active-drink { background: var(--color-drink); color: white; border-color: var(--color-drink); box-shadow: 0 8px 20px rgba(14,165,233,0.35); }
+
+        .galeria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .galeria-producto-card {
+            background: white;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border: 3px solid #f0f0f0;
+            transition: var(--transicion-rebote);
+            cursor: pointer;
+        }
+        .galeria-producto-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.12); }
+        .galeria-producto-card img {
+            width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
+            background: #f8f8f8;
+        }
+        .galeria-card-info { padding: 15px; }
+        .galeria-card-info h4 { font-size: 1rem; margin-bottom: 4px; }
+        .galeria-card-info p { font-size: 0.82rem; color: #888; margin: 0; }
+        .galeria-card-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+        }
+        .badge-salada { background: #ffe5e8; color: var(--color-rojo); }
+        .badge-dulce { background: var(--color-dulce-light); color: var(--color-dulce); }
+        .badge-boneless { background: #fff3cd; color: #d97706; }
+        .badge-bebida { background: var(--color-drink-light); color: var(--color-drink); }
+        .badge-nueva { background: var(--color-amarillo); color: white; margin-left: 5px; }
+
+        .galeria-panel { display: none; }
+        .galeria-panel.active { display: block; animation: fadeInUp 0.4s ease-out; }
+
+        /* =============================================
+           SECCIÓN DE PEDIDO — TABS DE CATEGORÍA
+        ============================================= */
+        .order-category-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .order-tab-btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 3px solid #eee;
+            background: white;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transicion-rebote);
+            color: #999;
+        }
+        .order-tab-btn:hover { transform: translateY(-3px); }
+        .order-tab-btn.active-salada { background: var(--color-rojo); color: white; border-color: var(--color-rojo); box-shadow: 0 8px 20px rgba(255,71,87,0.35); }
+        .order-tab-btn.active-boneless { background: #f59e0b; color: white; border-color: #f59e0b; box-shadow: 0 8px 20px rgba(245,158,11,0.35); }
+        .order-tab-btn.active-dulce { background: var(--color-dulce); color: white; border-color: var(--color-dulce); box-shadow: 0 8px 20px rgba(168,85,247,0.35); }
+        .order-tab-btn.active-bebida { background: var(--color-drink); color: white; border-color: var(--color-drink); box-shadow: 0 8px 20px rgba(14,165,233,0.35); }
+
+        .order-panel { display: none; }
+        .order-panel.active { display: block; animation: fadeInUp 0.4s ease-out; }
+
         .order-layout { display: grid; gap: 30px; }
         @media (min-width: 900px) { .order-layout { grid-template-columns: 1.6fr 1fr; align-items: start; } }
 
+        /* =============================================
+           TARJETAS DE PEDIDO — PANELES
+        ============================================= */
         .builder-options, .cart-container, #info, #quejas .container {
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
             padding: 30px; border-radius: 30px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 3px solid white;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        .builder-options.dulce-theme { border-top: 6px solid var(--color-dulce); }
+        .builder-options.boneless-theme { border-top: 6px solid #f59e0b; }
+        .builder-options.bebida-theme { border-top: 6px solid var(--color-drink); }
         .builder-options:hover, #info:hover, #quejas .container:hover { transform: translateY(-5px); box-shadow: 0 25px 60px rgba(0,0,0,0.12); }
 
         .step h3 { font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: var(--color-rojo); }
-        .step-number { background: linear-gradient(135deg, var(--color-amarillo), #FFC312); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1rem; font-weight: 900; box-shadow: 0 5px 15px rgba(255, 165, 2, 0.4); }
+        .step h3.dulce-color { color: var(--color-dulce); }
+        .step h3.boneless-color { color: #d97706; }
+        .step h3.bebida-color { color: var(--color-drink); }
+        .step-number { background: linear-gradient(135deg, var(--color-amarillo), #FFC312); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1rem; font-weight: 900; box-shadow: 0 5px 15px rgba(255,165,2,0.4); }
+        .step-number.dulce-num { background: linear-gradient(135deg, var(--color-dulce), #9333ea); }
+        .step-number.bebida-num { background: linear-gradient(135deg, var(--color-drink), #0284c7); }
+        .step-number.boneless-num { background: linear-gradient(135deg, #f59e0b, #d97706); }
 
-        /* --- BOTONES DE SELECCIÓN --- */
         .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; }
         .options-grid input[type="radio"] { display: none; }
         .options-grid label {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 15px 10px; background: white; border: 3px solid #eee;
-            border-radius: 20px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border-radius: 20px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: 700; font-size: 0.9rem; color: #999; height: 100%;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; overflow: hidden;
         }
@@ -241,58 +485,85 @@
         .options-grid label:hover { transform: translateY(-3px) scale(1.03); background: #fff8f9; border-color: #ffccd5; }
         .options-grid input[type="radio"]:checked + label {
             border-color: var(--color-rojo); background-color: #fff0f2; color: var(--color-rojo);
-            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.25); animation: jellyPop 0.6s; 
+            box-shadow: 0 10px 25px rgba(255,71,87,0.25); animation: jellyPop 0.6s;
         }
         .options-grid input[type="radio"]:checked + label i { color: var(--color-rojo); transform: scale(1.1); }
+
+        /* Dulce theme checked */
+        .dulce-options-grid input[type="radio"]:checked + label {
+            border-color: var(--color-dulce) !important; background-color: var(--color-dulce-light) !important; color: var(--color-dulce) !important;
+            box-shadow: 0 10px 25px rgba(168,85,247,0.25) !important;
+        }
+        /* Bebida theme checked */
+        .bebida-options-grid input[type="radio"]:checked + label {
+            border-color: var(--color-drink) !important; background-color: var(--color-drink-light) !important; color: var(--color-drink) !important;
+            box-shadow: 0 10px 25px rgba(14,165,233,0.25) !important;
+        }
+        /* Boneless theme checked */
+        .boneless-options-grid input[type="radio"]:checked + label {
+            border-color: #f59e0b !important; background-color: #fff8e1 !important; color: #d97706 !important;
+            box-shadow: 0 10px 25px rgba(245,158,11,0.25) !important;
+        }
+
         @keyframes jellyPop {
             0% { transform: scale(1, 1); } 30% { transform: scale(1.15, 0.85); } 40% { transform: scale(0.9, 1.1); }
             50% { transform: scale(1.05, 0.95); } 65% { transform: scale(0.98, 1.02); } 75% { transform: scale(1.02, 0.98); } 100% { transform: scale(1, 1); }
         }
 
-        /* --- PRECIOS Y BOTONES --- */
+        /* =============================================
+           PRECIOS Y BOTONES GENERALES
+        ============================================= */
         .banderilla-preview {
             background: linear-gradient(to right, #fff0f2, white); padding: 25px; border-radius: 20px; margin-top: 30px;
             display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--color-rojo); border: 2px solid #ffdde1;
         }
-        #banderilla-price-preview { font-size: 1.8rem; font-weight: 900; transition: transform 0.2s; }
+        .banderilla-preview.dulce-prev { background: linear-gradient(to right, var(--color-dulce-light), white); color: var(--color-dulce); border-color: #d8b4fe; }
+        .banderilla-preview.bebida-prev { background: linear-gradient(to right, var(--color-drink-light), white); color: var(--color-drink); border-color: #7dd3fc; }
+        .banderilla-preview.boneless-prev { background: linear-gradient(to right, #fff8e1, white); color: #d97706; border-color: #fde68a; }
+
+        #banderilla-price-preview, #boneless-price-preview, #dulce-price-preview, #bebida-price-preview { font-size: 1.8rem; font-weight: 900; transition: transform 0.2s; }
         .price-bump { animation: priceBump 0.3s; }
         @keyframes priceBump { 50% { transform: scale(1.2); color: var(--color-amarillo); } }
 
-        #add-banderilla-btn {
-            width: 100%; padding: 18px; margin-top: 25px; 
+        .add-item-btn {
+            width: 100%; padding: 18px; margin-top: 25px;
             background: linear-gradient(135deg, var(--color-rojo), #ff2e44); color: white;
             font-weight: 800; font-size: 1.2rem; border-radius: 20px; transition: var(--transicion-rebote);
-            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.4); border: none; cursor: pointer; position: relative; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255,71,87,0.4); border: none; cursor: pointer; position: relative; overflow: hidden;
         }
-        #add-banderilla-btn:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 15px 40px rgba(255, 71, 87, 0.5); }
-        #add-banderilla-btn:active { transform: scale(0.95); }
-        
+        .add-item-btn.dulce-btn { background: linear-gradient(135deg, var(--color-dulce), #9333ea); box-shadow: 0 10px 30px rgba(168,85,247,0.4); }
+        .add-item-btn.bebida-btn { background: linear-gradient(135deg, var(--color-drink), #0284c7); box-shadow: 0 10px 30px rgba(14,165,233,0.4); }
+        .add-item-btn.boneless-btn { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 10px 30px rgba(245,158,11,0.4); }
+        .add-item-btn:hover { transform: translateY(-5px) scale(1.03); }
+        .add-item-btn:active { transform: scale(0.95); }
+
         .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
         .extra-item {
             background: white; border: 3px solid #f4f4f4; padding: 20px; border-radius: 22px; text-align: center;
             display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: var(--transicion-rebote);
         }
-        .extra-item:hover { border-color: var(--color-amarillo); box-shadow: var(--sombra-hover); transform: translateY(-5px); }
-        
+        .extra-item:hover { border-color: var(--color-amarillo); transform: translateY(-5px); }
+        .extra-price-tag { font-size: 1.3rem; font-weight: 900; color: var(--color-rojo); margin: 8px 0; }
+
         .add-extra-btn, .add-special-extra-btn {
             background: var(--color-amarillo); color: var(--color-texto); font-weight: 800; border: none;
-            padding: 12px; border-radius: 12px; width: 100%; transition: var(--transicion-rebote); 
-            box-shadow: 0 5px 15px rgba(255, 165, 2, 0.3); cursor: pointer;
+            padding: 12px; border-radius: 12px; width: 100%; transition: var(--transicion-rebote);
+            box-shadow: 0 5px 15px rgba(255,165,2,0.3); cursor: pointer;
         }
-        .add-extra-btn:hover, .add-special-extra-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 20px rgba(255, 165, 2, 0.4); }
+        .add-extra-btn:hover, .add-special-extra-btn:hover { transform: translateY(-3px) scale(1.05); }
 
-        /* --- CARRITO --- */
+        /* =============================================
+           CARRITO
+        ============================================= */
         .cart-container { position: sticky; top: 20px; border: none; border-top: 6px solid var(--color-rojo); z-index: 100; }
         .cart-container.shake { animation: shakeCart 0.5s ease-in-out; }
         @keyframes shakeCart { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px) rotate(-2deg); } 75% { transform: translateX(5px) rotate(2deg); } }
-
         .cart-container h3 { text-align: center; font-size: 1.6rem; margin-bottom: 20px; color: var(--color-rojo); }
         #cart-items-container li {
             display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px;
             padding: 15px 0; border-bottom: 2px dashed #eee; font-size: 0.95rem; animation: slideInLeft 0.4s ease-out;
         }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-
         .remove-item-btn {
             background: #ffdae0; color: var(--color-rojo); width: 30px; height: 30px; border-radius: 50%; border: none;
             display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: var(--transicion-rebote); cursor: pointer;
@@ -300,72 +571,197 @@
         .remove-item-btn:hover { background: var(--color-rojo); color: white; transform: rotate(90deg) scale(1.1); }
         #cart-total-price { color: var(--color-rojo); font-size: 2rem; font-weight: 900; transition: 0.3s; }
 
+        /* =============================================
+           BOTONES DE ENTREGA
+        ============================================= */
+        .delivery-section { margin-top: 25px; }
+        .delivery-section h4 { font-size: 1rem; font-weight: 700; color: #888; text-align: center; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; }
+
         #whatsapp-order-btn {
             display: flex; justify-content: center; align-items: center; gap: 12px;
-            background: linear-gradient(135deg, #25D366, #1eae57); color: white; text-decoration: none; padding: 18px;
-            border-radius: 20px; font-weight: 800; font-size: 1.2rem; margin-top: 25px;
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4); transition: var(--transicion-rebote);
+            background: linear-gradient(135deg, #25D366, #1eae57); color: white; text-decoration: none; padding: 16px;
+            border-radius: 18px; font-weight: 800; font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(37,211,102,0.4); transition: var(--transicion-rebote);
+            width: 100%; border: none; cursor: pointer; text-align: center;
         }
-        #whatsapp-order-btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(37, 211, 102, 0.5); }
-        
-        /* ⚠️ CORRECCIÓN DE COLOR CUANDO ESTÁ DESACTIVADO ⚠️ */
-        #whatsapp-order-btn.disabled { 
-            background: #b2bec3 !important; 
-            box-shadow: none; 
-            pointer-events: none; 
+        #whatsapp-order-btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(37,211,102,0.5); }
+        #whatsapp-order-btn.disabled {
+            background: #b2bec3 !important;
+            box-shadow: none;
+            pointer-events: none;
             cursor: not-allowed;
             color: #eee;
         }
 
-        /* --- FOOTER & EXTRAS --- */
+        .delivery-divider {
+            display: flex; align-items: center; gap: 10px; margin: 15px 0;
+            font-size: 0.8rem; font-weight: 700; color: #ccc; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .delivery-divider::before, .delivery-divider::after { content: ''; flex: 1; height: 2px; background: #eee; border-radius: 2px; }
+
+        #domicilio-order-btn {
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, #FF7043, #E64A19); color: white; text-decoration: none; padding: 16px;
+            border-radius: 18px; font-weight: 800; font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(255,112,67,0.4); transition: var(--transicion-rebote);
+            width: 100%; border: none; cursor: pointer; text-align: center;
+        }
+        #domicilio-order-btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(255,112,67,0.5); }
+
+        /* =============================================
+           INFO / FAQ
+        ============================================= */
         details { background: white; margin-bottom: 15px; border-radius: 18px; padding: 18px 25px; transition: var(--transicion-rebote); border: 3px solid #f4f4f4; }
-        details[open] { border-color: var(--color-amarillo); box-shadow: var(--sombra-suave); transform: scale(1.02); }
+        details[open] { border-color: var(--color-amarillo); transform: scale(1.02); }
         summary { font-weight: 700; font-size: 1.05rem; cursor: pointer; }
 
+        /* =============================================
+           FOOTER
+        ============================================= */
         footer { background: var(--color-texto); color: white; text-align: center; padding: 60px 20px; margin-top: 60px; border-top-left-radius: 40px; border-top-right-radius: 40px; position: relative; z-index: 10; }
         footer a { color: white; font-size: 1.8rem; margin: 0 15px; transition: var(--transicion-rebote); display: inline-block; }
         footer a:hover { color: var(--color-amarillo); transform: scale(1.3) rotate(10deg); }
-        
-        #quejas textarea { 
-            width: 100%; padding: 18px; border-radius: 18px; border: 3px solid #eee; 
+
+        /* =============================================
+           QUEJAS
+        ============================================= */
+        #quejas textarea {
+            width: 100%; padding: 18px; border-radius: 18px; border: 3px solid #eee;
             font-family: inherit; background: white; transition: 0.3s; font-size: 1rem;
             box-shadow: inset 0 5px 10px rgba(0,0,0,0.05);
         }
-        #quejas textarea:focus { border-color: var(--color-amarillo); box-shadow: 0 0 0 4px rgba(255, 165, 2, 0.2); outline: none; }
+        #quejas textarea:focus { border-color: var(--color-amarillo); box-shadow: 0 0 0 4px rgba(255,165,2,0.2); outline: none; }
         #sugerencia-btn {
-            margin-top: 25px; background: linear-gradient(135deg, var(--color-amarillo), #ffc312); color: white; 
-            padding: 15px 35px; border-radius: 50px; font-weight: 800; font-size: 1.1rem; 
-            transition: var(--transicion-rebote); box-shadow: 0 10px 25px rgba(255, 165, 2, 0.3); border: none; cursor: pointer;
+            margin-top: 25px; background: linear-gradient(135deg, var(--color-amarillo), #ffc312); color: white;
+            padding: 15px 35px; border-radius: 50px; font-weight: 800; font-size: 1.1rem;
+            transition: var(--transicion-rebote); box-shadow: 0 10px 25px rgba(255,165,2,0.3); border: none; cursor: pointer;
         }
-        #sugerencia-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 35px rgba(255, 165, 2, 0.5); }
+        #sugerencia-btn:hover { transform: translateY(-5px) scale(1.05); }
 
-        /* ⚠️ CORRECCIÓN DE POPUP ⚠️ */
-        /* Ahora está oculto (display: none) por defecto */
-        .popup-overlay { 
-            display: none; 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; 
+        /* =============================================
+           POPUP SUGERENCIA
+        ============================================= */
+        .popup-overlay {
+            display: none;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center;
         }
-        /* Solo se muestra cuando tiene la clase 'active' */
         .popup-overlay.active { display: flex; }
-        
         .popup-content { background: white; padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; }
         .popup-close-btn { margin-top: 20px; padding: 10px 30px; background: var(--color-rojo); color: white; border-radius: 50px; font-weight: 700; cursor: pointer; border: none; }
 
-        /* SEGURIDAD DE IMÁGENES */
+        /* =============================================
+           SEGURIDAD IMÁGENES
+        ============================================= */
         img {
             -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -o-user-drag: none; user-drag: none;
             -webkit-user-select: none; user-select: none;
             pointer-events: auto; -webkit-touch-callout: none;
         }
 
+        /* =============================================
+           SECTION DIVIDERS
+        ============================================= */
+        .section-divider {
+            text-align: center;
+            padding: 10px 0 30px;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            color: #ddd;
+        }
+
+        /* =============================================
+           SALCHI OPCIONES
+        ============================================= */
+        .salchi-options label {
+            display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; cursor: pointer;
+        }
+
+        /* Nota de tipo de pedido */
+        .pickup-note {
+            text-align: center; margin-top: 15px; font-size: 0.8rem; color: #aaa; line-height: 1.5;
+        }
+        .pickup-note strong { color: #888; }
     </style>
 </head>
 <body>
 
-<div class="background-particles">
+<div class="background-particles"></div>
+
+<!-- =============================================
+     POPUP DE NOVEDADES (aparece al cargar)
+============================================= -->
+<div class="novedades-overlay active" id="popup-novedades">
+    <div class="novedades-popup">
+        <div class="novedades-header">
+            <img src="logo.png" alt="Astro Bite" class="popup-logo">
+            <span class="novedad-badge">🆕 Novedades</span>
+            <h2>¡Hay cosas nuevas!</h2>
+            <p>Mira lo que Astro preparó para ti 🐾</p>
+        </div>
+        <div class="novedades-body">
+
+            <div class="novedad-card">
+                <img src="boneless.png" class="novedad-card-img" alt="Banderilla de Boneless">
+
+                <div class="novedad-info">
+                    <h4>Banderilla de Boneless</h4>
+                    <p>Banderilla cubierta de pollo crujiente relleno de salchicha, queso o combinada. Desde $80</p>
+                </div>
+
+            </div>
+
+            <div class="novedad-card dulce">
+                <img src="kinder.jpeg" class="novedad-card-img" alt="Kinder Delice">
+                <div class="novedad-info">
+                    <h4>Banderilla Kinder Delice</h4>
+                    <p>¡El antojo dulce perfecto! Rellena de Kinder Delice. $65</p>
+                </div>
+                <!-- <img src="kinder.jpg" class="novedad-card-img" alt="Kinder"> -->
+            </div>
+
+            <div class="novedad-card bebida">
+                <div class="novedad-icon">🥤</div>
+                <div class="novedad-info">
+                    <h4>Bebidas</h4>
+                    <p>Refrescos de 600ml y Boing de 500ml. ¡Ahora también vendemos bebidas! $22</p>
+                </div>
+            </div>
+
+            <div class="novedad-card delivery">
+                <div class="novedad-icon">🛵</div>
+                <div class="novedad-info">
+                    <h4>¡Pedido a Domicilio!</h4>
+                    <p>Ahora puedes ordenar y recibir tu pedido en casa. </p>
+                    <button class="novedades-btn-primary">Ordenar Ahora</button>
+                </div>
+            </div>
+
+            <button class="novedades-close-btn" id="close-novedades-btn">
+                ¡Entendido, quiero ver el menú! 🐾
+            </button>
+        </div>
     </div>
+</div>
+
+<!-- =============================================
+     FLOATING SOCIALS
+============================================= -->
+<div class="floating-socials">
+    <a href="https://www.instagram.com/astro_bite/" target="_blank" class="social-btn instagram">
+        <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.tiktok.com/@_astrobites" target="_blank" class="social-btn tiktok">
+        <i class="fab fa-tiktok"></i>
+    </a>
+    <a href="https://order.top/store/astro_bite/5bbrFt" target="_blank" class="social-btn didi">
+        <i class="fas fa-motorcycle"></i>
+    </a>
+</div>
 
 <main>
+    <!-- =============================================
+         HERO
+    ============================================= -->
     <section id="hero">
         <div class="logo-wrapper">
             <img src="logo.png" alt="Logo de Astro Bite" class="logo-image">
@@ -374,6 +770,9 @@
         <p class="tagline">Crujientes, deliciosas y hechas con amor.</p>
     </section>
 
+    <!-- =============================================
+         CARRUSEL
+    ============================================= -->
     <section class="menu-carousel-section">
         <div class="title-container">
             <h2>Nuestras Estrellas ⭐</h2>
@@ -394,120 +793,396 @@
         </div>
     </section>
 
+    <!-- =============================================
+         GALERÍA MOMENTOS ASTRO
+    ============================================= -->
     <section id="galeria-real">
-        <div class="container" style="max-width: 100%; padding: 0;">
+        <div class="container" style="max-width:100%;padding:0;">
             <div class="title-container">
                 <h2>📸 Momentos <span class="highlight">Astro</span></h2>
             </div>
             <p class="scroll-hint">✨ Las recomendaciones del Chef Astro 🐾✨</p>
-            
             <div class="stream-container">
-                <div class="stream-item"><img src="real_astro.jpg" alt="Foto astro"><div class="polaroid-caption">El es Astro🐶 (CEO de AstroBite) </div></div>
-                <div class="stream-item"><img src="real_puesto.jpg" alt="Foto astro"><div class="polaroid-caption"> Aqui se hace toda la magia 🐶</div></div>
-                <div class="stream-item"><img src="real_aceite_2.jpg" alt="Foto astro"><div class="polaroid-caption"> Deliciosas y calientitas 🐶</div></div>
-                <div class="stream-item"><img src="real_varias.jpg" alt="Foto Cliente"><div class="polaroid-caption"> 4 siempre es mejor que 1 🤤</div></div>
+                <div class="stream-item"><img src="real_astro.jpg" alt="Foto astro"><div class="polaroid-caption">El es Astro🐶 (CEO de AstroBite)</div></div>
+                <div class="stream-item"><img src="real_puesto.jpg" alt="Foto astro"><div class="polaroid-caption">Aqui se hace toda la magia 🐶</div></div>
+                <div class="stream-item"><img src="real_aceite_2.jpg" alt="Foto astro"><div class="polaroid-caption">Deliciosas y calientitas 🐶</div></div>
+                <div class="stream-item"><img src="real_varias.jpg" alt="Foto Cliente"><div class="polaroid-caption">4 siempre es mejor que 1 🤤</div></div>
                 <div class="stream-item"><img src="real_cheetos.jpg" alt="Queso"><div class="polaroid-caption">Queso infinito 🧀</div></div>
                 <div class="stream-item"><img src="real_ramen.jpg" alt="Cocina"><div class="polaroid-caption">Será la mas crujiente? 🍜</div></div>
                 <div class="stream-item"><img src="flamin_real.jpg" alt="Flamin"><div class="polaroid-caption">¡Pica Rico! 🔥</div></div>
                 <div class="stream-item"><img src="real_aceite.jpg" alt="Equipo"><div class="polaroid-caption">Hecho con Amor ❤️</div></div>
                 <div class="stream-item"><img src="real_fh_cruji_ep.jpg" alt="Ejemplo"><div class="polaroid-caption">Team cruji o picante? ✨</div></div>
-                <div class="stream-item"><img src="real_favoritas.jpg" alt="Ejemplo"><div class="polaroid-caption">La Favorita de muchos </div></div>
+                <div class="stream-item"><img src="real_favoritas.jpg" alt="Ejemplo"><div class="polaroid-caption">La Favorita de muchos</div></div>
             </div>
         </div>
     </section>
 
+    <!-- =============================================
+         GALERÍA DE PRODUCTOS (NUEVA)
+    ============================================= -->
+    <section id="galeria-productos">
+        <div class="container">
+            <div class="title-container">
+                <h2>🍽️ Nuestro <span class="highlight">Menú</span></h2>
+            </div>
+            <p class="scroll-hint" style="margin-bottom:25px;">Toca una categoría para explorar 👇</p>
+
+            <div class="productos-tabs">
+                <button class="tab-btn active" data-panel="panel-saladas">🌶️ Banderillas Saladas</button>
+                <button class="tab-btn" data-panel="panel-dulces">🍫 Banderillas Dulces <span style="font-size:0.7rem;background:#e9d5ff;color:#9333ea;padding:2px 7px;border-radius:20px;margin-left:4px;">NUEVO</span></button>
+                <button class="tab-btn" data-panel="panel-bebidas">🥤 Bebidas <span style="font-size:0.7rem;background:#bae6fd;color:#0284c7;padding:2px 7px;border-radius:20px;margin-left:4px;">NUEVO</span></button>
+                <button class="tab-btn" data-panel="panel-extras">🐙 Extras</button>
+            </div>
+
+            <!-- Panel: Banderillas Saladas -->
+            <div class="galeria-panel active" id="panel-saladas">
+                <div class="galeria-grid">
+                    <div class="galeria-producto-card">
+                        <img src="cruji.jpeg" alt="Panko">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-salada">Salada</span>
+                            <h4>Banderilla Panko (Cruji)</h4>
+                            <p>La clásica crujiente. Desde $45 — Salchicha / $50 Combinada / $55 Queso</p>
+                        </div>
+                    </div>
+                    <div class="galeria-producto-card">
+                        <img src="papa.jpeg" alt="Papa">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-salada">Salada</span>
+                            <h4>Banderilla de Papa</h4>
+                            <p>Cubierta de cubitos de papa. Desde $50 — Salchicha / $55 Combinada / $60 Queso</p>
+                        </div>
+                    </div>
+                    <div class="galeria-producto-card">
+                        <img src="ramen.jpeg" alt="Ramen">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-salada">Salada</span>
+                            <h4>Banderilla de Ramen</h4>
+                            <p>Súper crujiente. Desde $55 — Salchicha / $60 Combinada / $65 Queso</p>
+                        </div>
+                    </div>
+                    <div class="galeria-producto-card">
+                        <img src="cheetos.jpeg" alt="Cheetos">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-salada">Salada</span>
+                            <h4>Banderilla de Cheetos</h4>
+                            <p>Explosión de queso intenso. Desde $55 — Salchicha / $60 Combinada / $65 Queso</p>
+                        </div>
+                    </div>
+                    <div class="galeria-producto-card">
+                        <img src="flamin.jpeg" alt="Flamin Hot">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-salada">Salada</span>
+                            <h4>Banderilla Flamin' Hot</h4>
+                            <p>¿Te atreves? Picosita y deliciosa. Desde $55 — Salchicha / $60 Combinada / $65 Queso</p>
+                        </div>
+                    </div>
+                    <div class="galeria-producto-card">
+                        <img src="boneless.png" alt="Boneless">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-boneless">Boneless</span>
+                            <span class="galeria-card-badge badge-nueva">NUEVO</span>
+                            <h4>Banderilla de Boneless</h4>
+                            <p>Pollo estilo boneless. $80 Salchicha / $85 Combinada / $90 Queso. +$15 con papas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Banderillas Dulces -->
+            <div class="galeria-panel" id="panel-dulces">
+                <div class="galeria-grid">
+                    <div class="galeria-producto-card">
+                        <img src="kinder.jpeg" alt="Kinder Delice">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-dulce">Dulce</span>
+                            <span class="galeria-card-badge badge-nueva">NUEVO</span>
+                            <h4>Banderilla Kinder Delice</h4>
+                            <p>Rellena de Kinder Delice. ¡El antojo dulce perfecto! $65</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Bebidas -->
+            <div class="galeria-panel" id="panel-bebidas">
+                <div class="galeria-grid">
+                    <div class="galeria-producto-card">
+                        <div style="aspect-ratio:4/3;background:linear-gradient(135deg,#e0f2fe,#bae6fd);display:flex;align-items:center;justify-content:center;font-size:5rem;">🥤</div>
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-bebida">Bebida</span>
+                            <span class="galeria-card-badge badge-nueva">NUEVO</span>
+                            <h4>Refrescos 600ml</h4>
+                            <p>Pepsi, Mirinda, Seven Up, Manzanita, Squirt. $22</p>
+                        </div>
+                    </div>
+                    <div class="galeria-producto-card">
+                        <div style="aspect-ratio:4/3;background:linear-gradient(135deg,#fef9c3,#fef08a);display:flex;align-items:center;justify-content:center;font-size:5rem;">🧃</div>
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-bebida">Bebida</span>
+                            <span class="galeria-card-badge badge-nueva">NUEVO</span>
+                            <h4>Boing 500ml</h4>
+                            <p>Mango, Manzana o Guayaba. $22</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Extras -->
+            <div class="galeria-panel" id="panel-extras">
+                <div class="galeria-grid">
+                    <div class="galeria-producto-card">
+                        <img src="salchipulpos.jpeg" alt="Salchipulpos">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-salada">Extra</span>
+                            <h4>Salchipulpos</h4>
+                            <p>Solos $35 · Con Papas $50</p>
+                        </div>
+                    </div>
+                    <div class="galeria-producto-card">
+                        <img src="orden_papas.jpeg" alt="Papa">
+                        <div class="galeria-card-info">
+                            <span class="galeria-card-badge badge-salada">Extra</span>
+                            <h4>Papas a la Francesa</h4>
+                            <p>$40</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SECCIÓN DE PEDIDO
+    ============================================= -->
     <section id="order">
         <div class="container">
             <div class="title-container">
                 <h2>🦴 Arma tu <span class="highlight">Pedido</span></h2>
             </div>
-            
+
+            <!-- Tabs de categoría de pedido -->
+            <div class="order-category-tabs">
+                <button class="order-tab-btn active-salada" data-order-panel="order-panel-salada">🥖 Banderillas Saladas</button>
+                <button class="order-tab-btn" data-order-panel="order-panel-dulce">🍫 Banderillas Dulces</button>
+                <button class="order-tab-btn" data-order-panel="order-panel-bebida">🥤 Bebidas</button>
+            </div>
+
             <div class="order-layout">
+                <!-- Columna izquierda: Builder -->
                 <div class="builder-container">
-                    <div class="builder-options">
-                        
-                        <div class="step">
-                            <h3><span class="step-number">1</span> Elige el Relleno</h3>
-                            <div class="options-grid" id="relleno-group">
-                                <input type="radio" id="r-salchicha" name="relleno" value="Salchicha">
-                                <label for="r-salchicha"><i class="fas fa-drumstick-bite"></i>Salchicha</label>
-                                <input type="radio" id="r-queso" name="relleno" value="Queso">
-                                <label for="r-queso"><i class="fas fa-cheese"></i>Queso</label>
-                                <input type="radio" id="r-combinada" name="relleno" value="Combinada" checked>
-                                <label for="r-combinada"><i class="fas fa-arrows-alt-h"></i>Combinada</label>
-                            </div>
-                        </div>
 
-                        <div class="step" style="margin-top: 35px;">
-                            <h3><span class="step-number">2</span> Elige la Cobertura</h3>
-                            <div class="options-grid" id="cubierta-group">
-                                <input type="radio" id="c-panko" name="cubierta" value="Panko" checked>
-                                <label for="c-panko">🍞 Panko</label>
-                                <input type="radio" id="c-papa" name="cubierta" value="Papa">
-                                <label for="c-papa">🥔 Papa</label>
-                                <input type="radio" id="c-ramen" name="cubierta" value="Ramen">
-                                <label for="c-ramen">🍜 Ramen</label>
-                                <input type="radio" id="c-cheetos" name="cubierta" value="Cheetos">
-                                <label for="c-cheetos">🧀 Cheetos</label>
-                                <input type="radio" id="c-flamin" name="cubierta" value="Flamin' Hot">
-                                <label for="c-flamin">🔥 Flamin'</label>
-                            </div>
-                        </div>
-
-                        <div class="step" style="margin-top: 35px;">
-                            <h3><span class="step-number">3</span> ¿Acompañas con Papas?</h3>
-                            <div class="options-grid" id="papas-banderilla-group">
-                                <input type="radio" id="p-bande-si" name="papas-banderilla" value="si">
-                                <label for="p-bande-si" style="background:#fff8e1;"><i class="fas fa-check" style="color:green;"></i> Sí (+$15)</label>
-                                <input type="radio" id="p-bande-no" name="papas-banderilla" value="no" checked>
-                                <label for="p-bande-no"><i class="fas fa-times"></i> No, gracias</label>
-                            </div>
-                        </div>
-
-                        <div class="banderilla-preview">
-                            <span>Costo de esta Banderilla:</span>
-                            <span id="banderilla-price-preview">$0.00</span>
-                        </div>
-                        <button id="add-banderilla-btn">¡Agregar a la Canasta! 🐾</button>
-
-                        <div class="extras-section-wrapper" style="margin-top: 40px; border-top: 3px dotted #eee; padding-top: 30px;">
+                    <!-- PANEL: Banderilla Salada -->
+                    <div class="order-panel active" id="order-panel-salada">
+                        <div class="builder-options">
                             <div class="step">
-                                <h3><i class="fas fa-plus-circle" style="color: var(--color-amarillo);"></i> Antojos Extra</h3>
-                                <div class="extras-grid">
-                                    <div class="extra-item special-extra-container">
-                                        <h4>🐙 Salchipulpos</h4>
-                                        <div class="salchi-options">
-                                            <label><input type="radio" name="salchi-type" value="solo" checked> Solitos ($35)</label></br>
-                                            <label><input type="radio" name="salchi-type" value="con-papas"> Con Papas (+$15)</label>
+                                <h3><span class="step-number">1</span> Elige el Relleno</h3>
+                                <div class="options-grid" id="relleno-group">
+                                    <input type="radio" id="r-salchicha" name="relleno" value="Salchicha">
+                                    <label for="r-salchicha"><i class="fas fa-drumstick-bite"></i>Salchicha</label>
+                                    <input type="radio" id="r-queso" name="relleno" value="Queso">
+                                    <label for="r-queso"><i class="fas fa-cheese"></i>Queso</label>
+                                    <input type="radio" id="r-combinada" name="relleno" value="Combinada" checked>
+                                    <label for="r-combinada"><i class="fas fa-arrows-alt-h"></i>Combinada</label>
+                                </div>
+                            </div>
+
+                            <div class="step" style="margin-top:35px;">
+                                <h3><span class="step-number">2</span> Elige la Cobertura</h3>
+                                <div class="options-grid" id="cubierta-group">
+                                    <input type="radio" id="c-panko" name="cubierta" value="Panko" checked>
+                                    <label for="c-panko">🍞 Panko</label>
+                                    <input type="radio" id="c-papa" name="cubierta" value="Papa">
+                                    <label for="c-papa">🥔 Papa</label>
+                                    <input type="radio" id="c-ramen" name="cubierta" value="Ramen">
+                                    <label for="c-ramen">🍜 Ramen</label>
+                                    <input type="radio" id="c-cheetos" name="cubierta" value="Cheetos">
+                                    <label for="c-cheetos">🧀 Cheetos</label>
+                                    <input type="radio" id="c-flamin" name="cubierta" value="Flamin' Hot">
+                                    <label for="c-flamin">🔥 Flamin'</label>
+                                    <input type="radio" id="c-boneless" name="cubierta" value="Boneless">
+                                    <label for="c-boneless">🍗 Boneless</label>
+                                </div>
+                            </div>
+
+                            <div class="step" style="margin-top:35px;">
+                                <h3><span class="step-number">3</span> ¿Acompañas con Papas?</h3>
+                                <div class="options-grid" id="papas-banderilla-group">
+                                    <input type="radio" id="p-bande-si" name="papas-banderilla" value="si">
+                                    <label for="p-bande-si" style="background:#fff8e1;"><i class="fas fa-check" style="color:green;"></i> Sí (+$15)</label>
+                                    <input type="radio" id="p-bande-no" name="papas-banderilla" value="no" checked>
+                                    <label for="p-bande-no"><i class="fas fa-times"></i> No, gracias</label>
+                                </div>
+                            </div>
+
+                            <div class="banderilla-preview">
+                                <span>Costo de esta Banderilla:</span>
+                                <span id="banderilla-price-preview">$0.00</span>
+                            </div>
+                            <button id="add-banderilla-btn" class="add-item-btn">¡Agregar a la Canasta! 🐾</button>
+
+                            <!-- Extras -->
+                            <div class="extras-section-wrapper" style="margin-top:40px;border-top:3px dotted #eee;padding-top:30px;">
+                                <div class="step">
+                                    <h3><i class="fas fa-plus-circle" style="color:var(--color-amarillo);"></i> Antojos Extra</h3>
+                                    <div class="extras-grid">
+                                        <div class="extra-item special-extra-container">
+                                            <h4>🐙 Salchipulpos</h4>
+                                            <div class="salchi-options">
+                                                <label><input type="radio" name="salchi-type" value="solo" checked> Solitos ($35)</label><br>
+                                                <label><input type="radio" name="salchi-type" value="con-papas"> Con Papas (+$15)</label>
+                                            </div>
+                                            <button class="add-special-extra-btn" data-name="Salchipulpos">Agregar</button>
                                         </div>
-                                        <button class="add-special-extra-btn" data-name="Salchipulpos">Agregar</button>
-                                    </div>
-                                    <div class="extra-item">
-                                        <h4>🍟 Papas a la Francesa</h4>
-                                        <span class="extra-price-tag">$40.00</span>
-                                        <button class="add-extra-btn" data-name="Papas a la Francesa" data-price="40">Agregar</button>
+                                        <div class="extra-item">
+                                            <h4>🍟 Papas a la Francesa</h4>
+                                            <span class="extra-price-tag">$40.00</span>
+                                            <button class="add-extra-btn" data-name="Papas a la Francesa" data-price="40">Agregar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
 
+                    <!-- PANEL: Boneless -->
+                    <div class="order-panel" id="order-panel-boneless">
+                        <div class="builder-options boneless-theme">
+                            <div class="step">
+                                <h3 class="boneless-color"><span class="step-number boneless-num">1</span> Elige el Relleno del Boneless</h3>
+                                <div class="options-grid boneless-options-grid" id="boneless-relleno-group">
+                                    <input type="radio" id="b-salchicha" name="boneless-relleno" value="Salchicha" checked>
+                                    <label for="b-salchicha"><i class="fas fa-drumstick-bite"></i>Salchicha<br><small>$80</small></label>
+                                    <input type="radio" id="b-combinada" name="boneless-relleno" value="Combinada">
+                                    <label for="b-combinada"><i class="fas fa-arrows-alt-h"></i>Combinada<br><small>$85</small></label>
+                                    <input type="radio" id="b-queso" name="boneless-relleno" value="Queso">
+                                    <label for="b-queso"><i class="fas fa-cheese"></i>Queso<br><small>$90</small></label>
+                                </div>
+                            </div>
+
+                            <div class="step" style="margin-top:35px;">
+                                <h3 class="boneless-color"><span class="step-number boneless-num">2</span> ¿Acompañas con Papas?</h3>
+                                <div class="options-grid boneless-options-grid" id="boneless-papas-group">
+                                    <input type="radio" id="bp-si" name="boneless-papas" value="si">
+                                    <label for="bp-si" style="background:#fff8e1;"><i class="fas fa-check" style="color:green;"></i> Sí (+$15)</label>
+                                    <input type="radio" id="bp-no" name="boneless-papas" value="no" checked>
+                                    <label for="bp-no"><i class="fas fa-times"></i> No, gracias</label>
+                                </div>
+                            </div>
+
+                            <div class="banderilla-preview boneless-prev">
+                                <span>Costo del Boneless:</span>
+                                <span id="boneless-price-preview">$80.00</span>
+                            </div>
+                            <button id="add-boneless-btn" class="add-item-btn boneless-btn">¡Agregar Boneless! 🍗</button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL: Dulce -->
+                    <div class="order-panel" id="order-panel-dulce">
+                        <div class="builder-options dulce-theme">
+                            <div style="text-align:center;padding:20px 0;">
+                                <div style="font-size:4rem;margin-bottom:15px;">🍫</div>
+                                <h3 class="dulce-color" style="font-size:1.5rem;justify-content:center;">Banderilla Kinder Delice</h3>
+                                <p style="color:#888;margin:10px 0 20px;">Rellena de Kinder Delice. El postre perfecto para terminar tu visita.</p>
+                                <div class="banderilla-preview dulce-prev" style="justify-content:center;gap:15px;">
+                                    <span>Precio:</span>
+                                    <span id="dulce-price-preview" style="font-size:2rem;font-weight:900;">$65.00</span>
+                                </div>
+                            </div>
+                            <button id="add-dulce-btn" class="add-item-btn dulce-btn">¡Agregar Banderilla Dulce! 🍫</button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL: Bebida -->
+                    <div class="order-panel" id="order-panel-bebida">
+                        <div class="builder-options bebida-theme">
+                            <div class="step">
+                                <h3 class="bebida-color"><span class="step-number bebida-num">1</span> Tipo de Bebida</h3>
+                                <div class="options-grid bebida-options-grid" id="bebida-tipo-group">
+                                    <input type="radio" id="beb-refresco" name="bebida-tipo" value="Refresco 600ml" checked>
+                                    <label for="beb-refresco">🥤 Refresco<br><small>600ml</small></label>
+                                    <input type="radio" id="beb-boing" name="bebida-tipo" value="Boing 500ml">
+                                    <label for="beb-boing">🧃 Boing<br><small>500ml</small></label>
+                                </div>
+                            </div>
+
+                            <div class="step" style="margin-top:35px;" id="sabor-refresco-step">
+                                <h3 class="bebida-color"><span class="step-number bebida-num">2</span> Elige el Sabor</h3>
+                                <div class="options-grid bebida-options-grid" id="bebida-sabor-group">
+                                    <input type="radio" id="s-pepsi" name="bebida-sabor" value="Pepsi" checked>
+                                    <label for="s-pepsi">🖤 Pepsi</label>
+                                    <input type="radio" id="s-mirinda" name="bebida-sabor" value="Mirinda">
+                                    <label for="s-mirinda">🟠 Mirinda</label>
+                                    <input type="radio" id="s-7up" name="bebida-sabor" value="Seven Up">
+                                    <label for="s-7up">💚 7UP</label>
+                                    <input type="radio" id="s-manzanita" name="bebida-sabor" value="Manzanita">
+                                    <label for="s-manzanita">🍎 Manzanita</label>
+                                    <input type="radio" id="s-squirt" name="bebida-sabor" value="Squirt">
+                                    <label for="s-squirt">🍋 Squirt</label>
+                                </div>
+                            </div>
+
+                            <div class="step" style="margin-top:35px;display:none;" id="sabor-boing-step">
+                                <h3 class="bebida-color"><span class="step-number bebida-num">2</span> Elige el Sabor Boing</h3>
+                                <div class="options-grid bebida-options-grid" id="boing-sabor-group">
+                                    <input type="radio" id="b-mango" name="boing-sabor" value="Mango" checked>
+                                    <label for="b-mango">🥭 Mango</label>
+                                    <input type="radio" id="b-manzana" name="boing-sabor" value="Manzana">
+                                    <label for="b-manzana">🍎 Manzana</label>
+                                    <input type="radio" id="b-guayaba" name="boing-sabor" value="Guayaba">
+                                    <label for="b-guayaba">🍐 Guayaba</label>
+                                </div>
+                            </div>
+
+                            <div class="banderilla-preview bebida-prev">
+                                <span>Precio de la Bebida:</span>
+                                <span id="bebida-price-preview">$22.00</span>
+                            </div>
+                            <button id="add-bebida-btn" class="add-item-btn bebida-btn">¡Agregar Bebida! 🥤</button>
+                        </div>
+                    </div>
+
+                </div><!-- /builder-container -->
+
+                <!-- Columna derecha: Carrito -->
                 <div class="cart-container" id="cart-box">
                     <h3>🛒 Tu Canasta</h3>
                     <ul id="cart-items-container"><p class="empty-cart-message">Tu pancita está vacía...</p></ul>
                     <div class="cart-total">
-                        <p style="margin:0; font-weight:700; color:#888; font-size:1rem;">TOTAL A PAGAR:</p>
+                        <p style="margin:0;font-weight:700;color:#888;font-size:1rem;">TOTAL A PAGAR:</p>
                         <p id="cart-total-price">$0.00</p>
                     </div>
-                    <a id="whatsapp-order-btn" href="#" target="_blank"><i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> Enviar Pedido</a>
-                    <p style="text-align:center; margin-top:15px; font-size:0.8rem; color:#aaa;">Pagas al recoger o por transferencia.</p>
+
+                    <div class="delivery-section">
+                        <h4>¿Cómo recibes tu pedido?</h4>
+
+                        <a id="whatsapp-order-btn" href="#" target="_blank">
+                            <i class="fab fa-whatsapp" style="font-size:1.3rem;"></i> 
+                            Recoger en el Puesto
+                        </a>
+
+                        <div class="delivery-divider">o pide a domicilio</div>
+
+                        <a id="domicilio-order-btn" href="https://order.top/store/astro_bite/5bbrFt" target="_blank">
+                            <i class="fas fa-motorcycle" style="font-size:1.1rem;"></i>
+                            Pedir a Domicilio 🛵
+                        </a>
+                    </div>
+
+                    <p class="pickup-note">
+                        <strong>🏪 Recoger en puesto:</strong> Te mandamos el pedido por WhatsApp y pagas al llegar.<br>
+                        <strong>🛵 Domicilio:</strong> Pedido a través de nuestra plataforma de entrega.
+                    </p>
                 </div>
-            </div>
+
+            </div><!-- /order-layout -->
         </div>
     </section>
-    
+
+    <!-- =============================================
+         INFO / FAQ
+    ============================================= -->
     <section id="info-section" style="padding-top:0;">
         <div class="container" id="info">
             <div class="title-container">
@@ -528,18 +1203,25 @@
                 </details>
                 <details>
                     <summary>⏱️ ¿Cuánto tarda?</summary>
-                    <p>Preparamos todo al momento para que esté súper crujiente. Toma en cuenta que tu banderilla debe estar de 5 a 7 minutos en el aceite para que quede deliciosa.</p>
+                    <p>Preparamos todo al momento para que esté súper crujiente. Cada banderilla necesita de 5 a 7 minutos en el aceite.</p>
+                </details>
+                <details>
+                    <summary>🛵 ¿Hacen envío a domicilio?</summary>
+                    <p>¡Sí! Ahora puedes pedir a domicilio. Usa el botón <strong>"Pedir a Domicilio"</strong> en la sección de pedidos para ver opciones y disponibilidad.</p>
                 </details>
             </div>
         </div>
     </section>
 
+    <!-- =============================================
+         BUZÓN DE ASTRO
+    ============================================= -->
     <section id="quejas">
         <div class="container">
             <div class="title-container">
                 <h2>💬 Buzón de Astro</h2>
             </div>
-            <p style="margin-bottom:25px; font-size:1.1rem; text-align: center;">¿Te encantó o podemos mejorar? ¡Queremos leerte!</p>
+            <p style="margin-bottom:25px;font-size:1.1rem;text-align:center;">¿Te encantó o podemos mejorar? ¡Queremos leerte!</p>
             <form id="form-sugerencia" action="https://formsubmit.co/banderillas.astro.bite@gmail.com" method="POST">
                 <input type="hidden" name="_captcha" value="false">
                 <textarea name="message" id="mensajeSugerencia" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
@@ -547,19 +1229,18 @@
             </form>
         </div>
     </section>
-
 </main>
 
 <footer>
-    <img src="logo.png" alt="Astro Bite Logo" style="width:100px; opacity:0.7; margin-bottom:25px; filter: grayscale(0) brightness(1.2) drop-shadow(0 5px 15px rgba(255,165,2,0.4)); animation: floatDog 4s ease-in-out infinite;">
+    <img src="logo.png" alt="Astro Bite Logo" style="width:100px;opacity:0.7;margin-bottom:25px;filter:grayscale(0) brightness(1.2) drop-shadow(0 5px 15px rgba(255,165,2,0.4));animation:floatDog 4s ease-in-out infinite;">
     <p>© 2026 Astro Bite | Hecho con mucho cariño 🐶</p>
-   
 </footer>
 
+<!-- Popup sugerencia -->
 <div class="popup-overlay" id="popup-sugerencia">
-    <div class="popup-content" style="animation: rotateEntrance 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;">
-        <h3 style="color: var(--color-rojo); font-size: 1.8rem;">¡Gracias! 🐾</h3>
-        <p style="font-size: 1.1rem;">Astro ha recibido tu mensaje y mueve la colita de felicidad.</p>
+    <div class="popup-content" style="animation:rotateEntrance 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;">
+        <h3 style="color:var(--color-rojo);font-size:1.8rem;">¡Gracias! 🐾</h3>
+        <p style="font-size:1.1rem;">Astro ha recibido tu mensaje y mueve la colita de felicidad.</p>
         <button class="popup-close-btn">¡De nada!</button>
     </div>
 </div>
@@ -567,22 +1248,86 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    const MODO_PRUEBA = true; 
+    const MODO_PRUEBA = true;
 
     // 🛡️ SEGURIDAD: BLOQUEAR CLIC DERECHO
     document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // VARS
+    // =============================================
+    // POPUP NOVEDADES
+    // =============================================
+    const closeNovedadesBtn = document.getElementById('close-novedades-btn');
+    const popupNovedades = document.getElementById('popup-novedades');
+    if (closeNovedadesBtn) {
+        closeNovedadesBtn.addEventListener('click', () => {
+            popupNovedades.style.animation = 'none';
+            popupNovedades.style.opacity = '0';
+            popupNovedades.style.transition = 'opacity 0.4s ease';
+            setTimeout(() => {
+                popupNovedades.classList.remove('active');
+                popupNovedades.style.opacity = '';
+            }, 400);
+        });
+    }
+
+    // =============================================
+    // TABS DE GALERÍA DE PRODUCTOS
+    // =============================================
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const galeriaPanels = document.querySelectorAll('.galeria-panel');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active', 'active-dulce', 'active-drink'));
+            galeriaPanels.forEach(p => p.classList.remove('active'));
+            const panelId = btn.dataset.panel;
+            if (panelId === 'panel-dulces') btn.classList.add('active-dulce');
+            else if (panelId === 'panel-bebidas') btn.classList.add('active-drink');
+            else btn.classList.add('active');
+            document.getElementById(panelId).classList.add('active');
+        });
+    });
+
+    // =============================================
+    // TABS DE PEDIDO
+    // =============================================
+    const orderTabBtns = document.querySelectorAll('.order-tab-btn');
+    const orderPanels = document.querySelectorAll('.order-panel');
+
+    orderTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            orderTabBtns.forEach(b => b.classList.remove('active-salada', 'active-boneless', 'active-dulce', 'active-bebida'));
+            orderPanels.forEach(p => p.classList.remove('active'));
+            const panelId = btn.dataset.orderPanel;
+            const clsMap = {
+                'order-panel-salada': 'active-salada',
+                'order-panel-boneless': 'active-boneless',
+                'order-panel-dulce': 'active-dulce',
+                'order-panel-bebida': 'active-bebida'
+            };
+            btn.classList.add(clsMap[panelId] || 'active-salada');
+            document.getElementById(panelId).classList.add('active');
+        });
+    });
+
+    // =============================================
+    // VARS DE PRECIOS
+    // =============================================
     const prices = {
         relleno: { Salchicha: 45, Combinada: 50, Queso: 55 },
-        cubiertaPapa: 5, cubiertaPremium: 10, papasConBanderilla: 15,
-        salchipulposSolo: 35, salchipulposConPapas: 50 
+        bonelessRelleno: { Salchicha: 80, Combinada: 85, Queso: 90 },
+        cubiertaPapa: 5, cubiertaPremium: 10, papasConBanderilla: 15, cubiertaBoneless: 35,
+        salchipulposSolo: 35, salchipulposConPapas: 50,
+        dulce: 65,
+        bebida: 22
     };
     const papaCubieta = ["Papa"];
     const premiumCubiertas = ["Cheetos", "Flamin' Hot"];
+    const bonelessCubierta = ["Boneless"];
     let pedido = [];
     let currentTooltip = null;
     let currentBasePrice = 0;
+    let currentBonelessPrice = 80;
 
     // SELECTORES
     const rellenoGroup = document.getElementById('relleno-group');
@@ -590,21 +1335,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const papasBanderillaGroup = document.getElementById('papas-banderilla-group');
     const banderillaPricePreview = document.getElementById('banderilla-price-preview');
     const addBanderillaBtn = document.getElementById('add-banderilla-btn');
+    const addBonelessBtn = document.getElementById('add-boneless-btn');
+    const addDulceBtn = document.getElementById('add-dulce-btn');
+    const addBebidaBtn = document.getElementById('add-bebida-btn');
     const cartItemsContainer = document.getElementById('cart-items-container');
     const cartTotalPrice = document.getElementById('cart-total-price');
     const cartBox = document.getElementById('cart-box');
     const whatsappBtn = document.getElementById('whatsapp-order-btn');
     const extrasSectionContainer = document.querySelector('.extras-grid');
-    const formSugerencia = document.getElementById('form-sugerencia'); 
+    const formSugerencia = document.getElementById('form-sugerencia');
+    const bonelessRellenoGroup = document.getElementById('boneless-relleno-group');
+    const bonelessPapasGroup = document.getElementById('boneless-papas-group');
+    const bonelessPricePreview = document.getElementById('boneless-price-preview');
+    const bebidaTipoGroup = document.getElementById('bebida-tipo-group');
 
-    // --- GENERADOR DE PARTÍCULAS (JS) ---
+    // =============================================
+    // PARTÍCULAS
+    // =============================================
     function createParticles() {
         const container = document.querySelector('.background-particles');
         const icons = ['fa-bone', 'fa-paw', 'fa-hotdog', 'fa-star'];
         for (let i = 0; i < 15; i++) {
             const particle = document.createElement('i');
             particle.classList.add('fas', icons[Math.floor(Math.random() * icons.length)], 'particle');
-            particle.style.color = '#7D392E'; // Café oscuro
+            particle.style.color = '#7D392E';
             particle.style.left = Math.random() * 100 + 'vw';
             particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
             particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
@@ -614,45 +1368,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     createParticles();
 
-    // --- FUNCIÓN DE CONFETI 🎉 ---
+    // =============================================
+    // CONFETI
+    // =============================================
     function triggerConfetti() {
         if (typeof confetti === 'function') {
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#FF4757', '#FFA502', '#ffffff'], // Colores de Astro Bite
-                disableForReducedMotion: true
-            });
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#FF4757', '#FFA502', '#ffffff'], disableForReducedMotion: true });
         }
     }
 
-    // --- CONTADOR DE PRECIO ANIMADO ---
+    // =============================================
+    // ANIMACIÓN CONTADOR
+    // =============================================
     function animateValue(obj, start, end, duration) {
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             obj.innerHTML = '$' + (progress * (end - start) + start).toFixed(2);
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
+            if (progress < 1) window.requestAnimationFrame(step);
         };
         window.requestAnimationFrame(step);
     }
 
-    // LOGICA PRECIOS
+    // =============================================
+    // PRECIO BANDERILLA SALADA
+    // =============================================
     function actualizarPrecioPreview() {
         const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
         const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
         const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
         if (!selectedRelleno || !selectedCubierta) return 0;
-        
         let nuevoPrecio = prices.relleno[selectedRelleno.value];
         if (premiumCubiertas.includes(selectedCubierta.value)) nuevoPrecio += prices.cubiertaPremium;
+        if (bonelessCubierta.includes(selectedCubierta.value)) nuevoPrecio += prices.cubiertaBoneless;
         if (papaCubieta.includes(selectedCubierta.value)) nuevoPrecio += prices.cubiertaPapa;
         if (selectedPapas && selectedPapas.value === 'si') nuevoPrecio += prices.papasConBanderilla;
-        
         if (currentBasePrice !== nuevoPrecio) {
             animateValue(banderillaPricePreview, currentBasePrice, nuevoPrecio, 300);
             banderillaPricePreview.classList.remove('price-bump');
@@ -663,75 +1414,133 @@ document.addEventListener('DOMContentLoaded', () => {
         return nuevoPrecio;
     }
 
-    // AGREGAR BANDERILLA
+    // =============================================
+    // PRECIO BONELESS
+    // =============================================
+    function actualizarPrecioBoneless() {
+        const selectedRelleno = document.querySelector('input[name="boneless-relleno"]:checked');
+        const selectedPapas = document.querySelector('input[name="boneless-papas"]:checked');
+        if (!selectedRelleno) return 80;
+        let nuevoPrecio = prices.bonelessRelleno[selectedRelleno.value];
+        if (selectedPapas && selectedPapas.value === 'si') nuevoPrecio += prices.papasConBanderilla;
+        if (currentBonelessPrice !== nuevoPrecio) {
+            animateValue(bonelessPricePreview, currentBonelessPrice, nuevoPrecio, 300);
+            bonelessPricePreview.classList.remove('price-bump');
+            void bonelessPricePreview.offsetWidth;
+            bonelessPricePreview.classList.add('price-bump');
+            currentBonelessPrice = nuevoPrecio;
+        }
+        return nuevoPrecio;
+    }
+
+    // =============================================
+    // TOGGLE SABORES BEBIDA
+    // =============================================
+    function toggleSaboresBebida() {
+        const tipo = document.querySelector('input[name="bebida-tipo"]:checked')?.value;
+        document.getElementById('sabor-refresco-step').style.display = (tipo === 'Refresco 600ml') ? 'block' : 'none';
+        document.getElementById('sabor-boing-step').style.display = (tipo === 'Boing 500ml') ? 'block' : 'none';
+    }
+
+    // =============================================
+    // SHAKE CART
+    // =============================================
     function shakeCart() {
         cartBox.classList.remove('shake');
         void cartBox.offsetWidth;
         cartBox.classList.add('shake');
     }
 
+    // =============================================
+    // ANIMACIÓN BOTÓN
+    // =============================================
+    function animarBoton(boton) {
+        boton.classList.add('confirmed');
+        boton.disabled = true;
+        const originalText = boton.textContent;
+        boton.textContent = '✅ ¡Agregado!';
+        setTimeout(() => {
+            boton.classList.remove('confirmed');
+            boton.disabled = false;
+            boton.textContent = originalText;
+        }, 1500);
+    }
+
+    // =============================================
+    // AGREGAR ITEMS AL PEDIDO
+    // =============================================
     function agregarBanderilla() {
         if (addBanderillaBtn.classList.contains('confirmed')) return;
         const selectedRelleno = document.querySelector('input[name="relleno"]:checked');
         const selectedCubierta = document.querySelector('input[name="cubierta"]:checked');
         const selectedPapas = document.querySelector('input[name="papas-banderilla"]:checked');
-        const precioFinalBanderilla = actualizarPrecioPreview();
-        
-        let nombreBanderilla = `Band. ${selectedRelleno.value} (${selectedCubierta.value})`;
-        if (selectedPapas && selectedPapas.value === 'si') nombreBanderilla += ' + Papas';
-        
-        const nuevaBanderilla = { id: Date.now(), nombre: nombreBanderilla, precio: precioFinalBanderilla };
-        pedido.push(nuevaBanderilla);
-        renderizarPedido();
-        animarBoton(addBanderillaBtn);
-        shakeCart();
-        triggerConfetti(); // ¡EXPLOSIÓN DE CONFETI!
+        const precioFinal = actualizarPrecioPreview();
+        let nombre = `Banderilla ${selectedRelleno.value} (${selectedCubierta.value})`;
+        if (selectedPapas && selectedPapas.value === 'si') nombre += ' + Papas';
+        pedido.push({ id: Date.now(), nombre, precio: precioFinal });
+        renderizarPedido(); animarBoton(addBanderillaBtn); shakeCart(); triggerConfetti();
     }
 
-    // EXTRAS
+    function agregarBoneless() {
+        if (addBonelessBtn.classList.contains('confirmed')) return;
+        const selectedRelleno = document.querySelector('input[name="boneless-relleno"]:checked');
+        const selectedPapas = document.querySelector('input[name="boneless-papas"]:checked');
+        const precioFinal = actualizarPrecioBoneless();
+        let nombre = `Boneless ${selectedRelleno.value}`;
+        if (selectedPapas && selectedPapas.value === 'si') nombre += ' + Papas';
+        pedido.push({ id: Date.now(), nombre, precio: precioFinal });
+        renderizarPedido(); animarBoton(addBonelessBtn); shakeCart(); triggerConfetti();
+    }
+
+    function agregarDulce() {
+        if (addDulceBtn.classList.contains('confirmed')) return;
+        pedido.push({ id: Date.now(), nombre: 'Banderilla Kinder Delice 🍫', precio: prices.dulce });
+        renderizarPedido(); animarBoton(addDulceBtn); shakeCart(); triggerConfetti();
+    }
+
+    function agregarBebida() {
+        if (addBebidaBtn.classList.contains('confirmed')) return;
+        const tipo = document.querySelector('input[name="bebida-tipo"]:checked')?.value;
+        let sabor = '';
+        if (tipo === 'Refresco 600ml') {
+            sabor = document.querySelector('input[name="bebida-sabor"]:checked')?.value || 'Pepsi';
+        } else {
+            sabor = document.querySelector('input[name="boing-sabor"]:checked')?.value || 'Mango';
+        }
+        const nombre = `${tipo} - ${sabor}`;
+        pedido.push({ id: Date.now(), nombre, precio: prices.bebida });
+        renderizarPedido(); animarBoton(addBebidaBtn); shakeCart(); triggerConfetti();
+    }
+
     function agregarExtraSimple(nombre, precio, botonPresionado) {
         if (botonPresionado.classList.contains('confirmed')) return;
-        const nuevoExtra = { id: Date.now(), nombre: nombre, precio: parseFloat(precio) };
-        pedido.push(nuevoExtra);
-        renderizarPedido();
-        animarBoton(botonPresionado);
-        shakeCart();
+        pedido.push({ id: Date.now(), nombre, precio: parseFloat(precio) });
+        renderizarPedido(); animarBoton(botonPresionado); shakeCart();
     }
 
     function agregarSalchipulpos(botonPresionado) {
-         if (botonPresionado.classList.contains('confirmed')) return;
-         const container = botonPresionado.closest('.special-extra-container');
-         const tipoSeleccionado = container.querySelector('input[name="salchi-type"]:checked').value;
-         
-         let nombreFinal = "Salchipulpos";
-         let precioFinal = 0;
-         if(tipoSeleccionado === 'solo') {
-             nombreFinal += " (Solos)";
-             precioFinal = prices.salchipulposSolo;
-         } else {
-             nombreFinal += " con Papas";
-             precioFinal = prices.salchipulposConPapas;
-         }
-         const nuevoExtra = { id: Date.now(), nombre: nombreFinal, precio: precioFinal };
-         pedido.push(nuevoExtra);
-         renderizarPedido();
-         animarBoton(botonPresionado);
-         shakeCart();
+        if (botonPresionado.classList.contains('confirmed')) return;
+        const container = botonPresionado.closest('.special-extra-container');
+        const tipo = container.querySelector('input[name="salchi-type"]:checked').value;
+        let nombre = "Salchipulpos";
+        let precio = 0;
+        if (tipo === 'solo') { nombre += " (Solos)"; precio = prices.salchipulposSolo; }
+        else { nombre += " con Papas"; precio = prices.salchipulposConPapas; }
+        pedido.push({ id: Date.now(), nombre, precio });
+        renderizarPedido(); animarBoton(botonPresionado); shakeCart();
     }
 
-    function animarBoton(boton) {
-        boton.classList.add('confirmed');
-        boton.disabled = true;
-        setTimeout(() => { boton.classList.remove('confirmed'); boton.disabled = false; }, 1500);
-    }
-
-    // CARRITO
+    // =============================================
+    // ELIMINAR ITEM
+    // =============================================
     function eliminarDelPedido(itemId) {
         pedido = pedido.filter(item => item.id !== parseInt(itemId));
-        renderizarPedido();
-        shakeCart();
+        renderizarPedido(); shakeCart();
     }
 
+    // =============================================
+    // RENDERIZAR CARRITO
+    // =============================================
     let currentTotal = 0;
     function renderizarPedido() {
         cartItemsContainer.innerHTML = '';
@@ -748,45 +1557,38 @@ document.addEventListener('DOMContentLoaded', () => {
         animateValue(cartTotalPrice, currentTotal, nuevoTotal, 500);
         currentTotal = nuevoTotal;
         actualizarLinkWhatsApp();
-        actualizarEstadoWhatsappBtn(); 
+        actualizarEstadoWhatsappBtn();
     }
 
+    // =============================================
+    // LINK WHATSAPP
+    // =============================================
     function actualizarLinkWhatsApp() {
         if (pedido.length === 0) { whatsappBtn.href = '#'; return; }
-        let orderText = '¡Hola Astro Bite! 🐶 Quisiera hacer este pedido:\n\n';
+        let orderText = '¡Hola Astro Bite! 🐶 Quisiera hacer este pedido (para RECOGER en el puesto):\n\n';
         pedido.forEach(item => { orderText += `- ${item.nombre}: $${item.precio.toFixed(2)}\n`; });
         const total = pedido.reduce((sum, item) => sum + item.precio, 0);
         orderText += `\n*TOTAL A PAGAR: $${total.toFixed(2)}*\n\n¿Me confirman por favor?`;
         whatsappBtn.href = `https://api.whatsapp.com/send?phone=5615635393&text=${encodeURIComponent(orderText)}`;
     }
 
+    // =============================================
+    // ESTADO BOTÓN WHATSAPP
+    // =============================================
     function actualizarEstadoWhatsappBtn() {
         const tiendaAbierta = verificarHorario();
-        const agotado = false; 
-        
-        // REINICIAMOS ESTADO PRIMERO
         whatsappBtn.classList.remove('disabled');
-        whatsappBtn.style.pointerEvents = 'auto'; // Habilitar clics
-        whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Pedido'; 
-
+        whatsappBtn.style.pointerEvents = 'auto';
+        whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Recoger en el Puesto';
         if (!tiendaAbierta) {
-            whatsappBtn.classList.add('disabled'); 
-            whatsappBtn.removeAttribute('href'); // ⚠️ BORRA EL LINK PARA QUE NO FUNCIONE
-            whatsappBtn.style.pointerEvents = 'none'; // ⚠️ BLOQUEA EL CLIC POR CSS TAMBIÉN
-            whatsappBtn.innerHTML = '<i class="fas fa-store-slash"></i> Tienda Cerrada'; 
-            return; 
-        }
-        if (agotado) {
-            whatsappBtn.classList.add('disabled'); 
+            whatsappBtn.classList.add('disabled');
             whatsappBtn.removeAttribute('href');
             whatsappBtn.style.pointerEvents = 'none';
-            whatsappBtn.textContent = 'Producto Agotado'; 
-            return; 
+            whatsappBtn.innerHTML = '<i class="fas fa-store-slash"></i> Tienda Cerrada';
+            return;
         }
         if (pedido.length === 0) {
-            whatsappBtn.classList.add('disabled'); 
-            // Aquí NO quitamos el href pero visualmente parece deshabilitado
-            // para que el usuario sepa que tiene que agregar algo
+            whatsappBtn.classList.add('disabled');
         }
     }
 
@@ -800,24 +1602,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function mostrarAviso() {
         const avisoExistente = document.getElementById('aviso-horario');
-        if(avisoExistente) avisoExistente.remove();
+        if (avisoExistente) avisoExistente.remove();
         const tiendaAbierta = verificarHorario();
-        const agotado = false; 
-
-        if (!tiendaAbierta || agotado) {
-             const avisoHorario = document.createElement('div');
-             avisoHorario.id = 'aviso-horario';
-             avisoHorario.style.cssText = `position: sticky; top: 0; width: 100%; z-index: 1000; background: var(--color-texto); color: var(--color-amarillo); padding: 15px; text-align: center; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 0.95rem; animation: slideDown 0.5s ease-out;`;
-             document.body.prepend(avisoHorario);
-             if (!tiendaAbierta) {
-                avisoHorario.innerHTML = "😴 <strong>Astro está descansando.</strong> Horario: Jueves, Sábado y Domingo de 4:00 PM a 9:00 PM.";
-             } else {
-                avisoHorario.innerHTML = "❌ <strong>¡Se acabó todo por hoy!</strong> Muchas gracias. Vuelve mañana.";
-             }
+        if (!tiendaAbierta) {
+            const avisoHorario = document.createElement('div');
+            avisoHorario.id = 'aviso-horario';
+            avisoHorario.style.cssText = `position:sticky;top:0;width:100%;z-index:1000;background:var(--color-texto);color:var(--color-amarillo);padding:15px;text-align:center;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,0.1);font-size:0.95rem;`;
+            avisoHorario.innerHTML = "😴 <strong>Astro está descansando.</strong> Horario: Jueves, Sábado y Domingo de 4:00 PM a 9:00 PM.";
+            document.body.prepend(avisoHorario);
         }
         actualizarEstadoWhatsappBtn();
     }
 
+    // =============================================
+    // POPUP SUGERENCIA
+    // =============================================
     function crearPopupSugerencia() {
         const popup = document.getElementById('popup-sugerencia');
         if (!popup) return;
@@ -825,39 +1624,45 @@ document.addEventListener('DOMContentLoaded', () => {
         popup.querySelector('.popup-close-btn').addEventListener('click', cerrarPopup);
         popup.addEventListener('click', (e) => { if (e.target.id === 'popup-sugerencia') cerrarPopup(); });
     }
-    
+
+    // =============================================
     // LISTENERS
+    // =============================================
     rellenoGroup.addEventListener('change', actualizarPrecioPreview);
     cubiertaGroup.addEventListener('change', actualizarPrecioPreview);
     papasBanderillaGroup.addEventListener('change', actualizarPrecioPreview);
     addBanderillaBtn.addEventListener('click', agregarBanderilla);
-    
-    extrasSectionContainer.addEventListener('click', (e) => {
-        const btnSimple = e.target.closest('.add-extra-btn');
-        if (btnSimple) { agregarExtraSimple(btnSimple.dataset.name, btnSimple.dataset.price, btnSimple); return; }
-        const btnEspecial = e.target.closest('.add-special-extra-btn');
-        if (btnEspecial) { agregarSalchipulpos(btnEspecial); return; }
-    });
-    
+
+    bonelessRellenoGroup.addEventListener('change', actualizarPrecioBoneless);
+    bonelessPapasGroup.addEventListener('change', actualizarPrecioBoneless);
+    addBonelessBtn.addEventListener('click', agregarBoneless);
+
+    addDulceBtn.addEventListener('click', agregarDulce);
+    addBebidaBtn.addEventListener('click', agregarBebida);
+
+    bebidaTipoGroup.addEventListener('change', toggleSaboresBebida);
+
+    if (extrasSectionContainer) {
+        extrasSectionContainer.addEventListener('click', (e) => {
+            const btnSimple = e.target.closest('.add-extra-btn');
+            if (btnSimple) { agregarExtraSimple(btnSimple.dataset.name, btnSimple.dataset.price, btnSimple); return; }
+            const btnEspecial = e.target.closest('.add-special-extra-btn');
+            if (btnEspecial) { agregarSalchipulpos(btnEspecial); return; }
+        });
+    }
+
     cartItemsContainer.addEventListener('click', (e) => {
         const btnEliminar = e.target.closest('.remove-item-btn');
         if (btnEliminar) eliminarDelPedido(btnEliminar.dataset.id);
     });
 
     whatsappBtn.addEventListener('click', (e) => {
-        // DOBLE SEGURIDAD: Si tiene la clase disabled, NO HACE NADA
-        if (whatsappBtn.classList.contains('disabled')) {
-            e.preventDefault();
-            return false;
-        }
-        if (pedido.length === 0) { 
-            e.preventDefault(); 
-            alert("¡Tu canasta está vacía! Agrega unas banderillas primero 🐾"); 
-        }
+        if (whatsappBtn.classList.contains('disabled')) { e.preventDefault(); return false; }
+        if (pedido.length === 0) { e.preventDefault(); alert("¡Tu canasta está vacía! Agrega algo primero 🐾"); }
     });
 
     if (formSugerencia) {
-        formSugerencia.addEventListener('submit', function (event) {
+        formSugerencia.addEventListener('submit', function(event) {
             event.preventDefault();
             const botonSubmit = document.getElementById('sugerencia-btn');
             const formData = new FormData(this);
@@ -866,13 +1671,14 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => {
                 if (response.ok) { document.getElementById('popup-sugerencia')?.classList.add('active'); formSugerencia.reset(); }
                 else { alert('Hubo un problema. Intenta de nuevo.'); }
-            }).catch(error => { alert('Error de conexión.'); })
+            }).catch(() => { alert('Error de conexión.'); })
             .finally(() => { botonSubmit.disabled = false; botonSubmit.textContent = 'Enviar Comentario 🐾'; });
         });
     }
-    
+
+    // Tooltips carrusel
     const carouselImages = document.querySelectorAll('.carousel img');
-    if(carouselImages.length > 0) {
+    if (carouselImages.length > 0) {
         carouselImages.forEach(img => {
             img.addEventListener('click', () => {
                 if (currentTooltip) currentTooltip.remove();
@@ -880,31 +1686,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 tooltip.className = 'tooltip'; tooltip.textContent = img.dataset.desc;
                 document.body.appendChild(tooltip);
                 const rect = img.getBoundingClientRect();
-                tooltip.style.left = `${rect.left + window.scrollX}px`;
-                tooltip.style.top = `${rect.bottom + window.scrollY + 10}px`;
+                tooltip.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.bottom + 10}px;background:#333;color:white;padding:8px 14px;border-radius:10px;font-size:0.85rem;z-index:9999;max-width:200px;`;
                 currentTooltip = tooltip;
-                setTimeout(() => { if(currentTooltip) currentTooltip.remove(); }, 3000);
+                setTimeout(() => { if (currentTooltip) currentTooltip.remove(); }, 3000);
             });
         });
     }
 
+    // =============================================
     // INIT
+    // =============================================
     actualizarPrecioPreview();
+    actualizarPrecioBoneless();
+    toggleSaboresBebida();
     renderizarPedido();
     crearPopupSugerencia();
     mostrarAviso();
 });
 </script>
 
-<div class="floating-socials">
-    <a href="https://www.instagram.com/astro_bite/" target="_blank" class="social-btn instagram">
-        <i class="fab fa-instagram"></i>
-    </a>
-    <a href="https://www.tiktok.com/@_astrobites" target="_blank" class="social-btn tiktok">
-        <i class="fab fa-tiktok"></i>
-    </a>
-</div>
-
 </body>
-
 </html>
